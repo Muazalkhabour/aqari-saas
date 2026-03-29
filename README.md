@@ -1,4 +1,7 @@
 # 🏢 Aqari SaaS - Syrian Real Estate Platform
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/8189812a-9dce-46d9-a91b-9959787e89c7" width="600px">
+</p>
 
 Welcome to **Aqari SaaS**, a modern, high-performance platform designed specifically for the Syrian real estate market. This platform provides a seamless experience for buyers, sellers, and agents to connect and transact.
 
