@@ -1,0 +1,45 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="900" fill="#F4EADF"/>
+  <rect y="530" width="1600" height="370" fill="#CFA77B"/>
+  <rect x="108" y="116" width="436" height="300" rx="28" fill="#FCFCFA"/>
+  <rect x="138" y="146" width="376" height="240" rx="18" fill="url(#sky1)"/>
+  <rect x="320" y="146" width="14" height="240" fill="#E9E4DD"/>
+  <rect x="138" y="257" width="376" height="10" fill="#E9E4DD"/>
+  <rect x="1030" y="124" width="228" height="196" rx="26" fill="#F7F2EA"/>
+  <rect x="1060" y="160" width="168" height="18" rx="9" fill="#D6C8B6"/>
+  <rect x="1060" y="204" width="168" height="18" rx="9" fill="#E3D7C8"/>
+  <rect x="1060" y="248" width="132" height="18" rx="9" fill="#E8DDD0"/>
+  <rect x="392" y="424" width="636" height="190" rx="44" fill="url(#sofa1)"/>
+  <rect x="440" y="378" width="200" height="66" rx="32" fill="#A17C61"/>
+  <rect x="774" y="378" width="200" height="66" rx="32" fill="#9A765D"/>
+  <rect x="454" y="472" width="126" height="94" rx="24" fill="#E6DDCF"/>
+  <rect x="648" y="484" width="150" height="80" rx="24" fill="#C78D5B"/>
+  <rect x="844" y="472" width="126" height="94" rx="24" fill="#EFE7DA"/>
+  <ellipse cx="800" cy="694" rx="302" ry="92" fill="url(#rug1)"/>
+  <rect x="650" y="612" width="300" height="94" rx="28" fill="#F9F6F1"/>
+  <rect x="704" y="640" width="192" height="16" rx="8" fill="#D6CABC"/>
+  <rect x="744" y="668" width="112" height="12" rx="6" fill="#E7DDD1"/>
+  <rect x="690" y="700" width="12" height="52" rx="6" fill="#896B54"/>
+  <rect x="898" y="700" width="12" height="52" rx="6" fill="#896B54"/>
+  <rect x="1260" y="446" width="30" height="202" rx="15" fill="#6E533E"/>
+  <ellipse cx="1274" cy="418" rx="74" ry="74" fill="#8FB68C"/>
+  <ellipse cx="1326" cy="456" rx="58" ry="58" fill="#759E72" fill-opacity="0.9"/>
+  <rect x="236" y="306" width="92" height="16" rx="8" fill="#A6A09B" fill-opacity="0.55"/>
+  <rect x="716" y="126" width="24" height="214" rx="12" fill="#85705E"/>
+  <ellipse cx="728" cy="114" rx="66" ry="66" fill="#F1DFC0"/>
+  <defs>
+    <linearGradient id="sky1" x1="326" y1="146" x2="326" y2="386" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#DDEEFF"/>
+      <stop offset="1" stop-color="#FFF8F1"/>
+    </linearGradient>
+    <linearGradient id="sofa1" x1="710" y1="424" x2="710" y2="614" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8A684F"/>
+      <stop offset="1" stop-color="#634B39"/>
+    </linearGradient>
+    <linearGradient id="rug1" x1="498" y1="694" x2="1102" y2="694" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D8EFE8"/>
+      <stop offset="0.5" stop-color="#FAFAF6"/>
+      <stop offset="1" stop-color="#EADFCB"/>
+    </linearGradient>
+  </defs>
+</svg>

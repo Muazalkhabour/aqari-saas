@@ -1,0 +1,142 @@
+[
+  {
+    "id": "demo-notification-01",
+    "contractId": "contract-rima",
+    "type": "contract-renewed",
+    "severity": "info",
+    "title": "تم تجديد عقد ريما خليل",
+    "message": "جرى تمديد عقد ريما خليل في شقة عائلية في المزة الغربية حتى 30 نيسان 2026 بعد مراجعة الدفعة الأخيرة.",
+    "createdAt": "2026-03-28T09:30:00.000Z",
+    "readAt": null
+  },
+  {
+    "id": "demo-notification-02",
+    "contractId": "contract-samer",
+    "type": "contract-terminated",
+    "severity": "high",
+    "title": "اعتماد إنهاء عقد سامر حلاق",
+    "message": "تم تثبيت إنهاء العقد بطلب من المستأجر مع إغلاق الوحدة Sea-5 وتحويلها للعرض من جديد.",
+    "createdAt": "2026-03-28T08:45:00.000Z",
+    "readAt": null
+  },
+  {
+    "id": "demo-notification-03",
+    "contractId": "contract-lina",
+    "type": "contract-renewed",
+    "severity": "warning",
+    "title": "تجديد مشروط لعقد لينا يونس",
+    "message": "تم التجديد لمدة 6 أشهر مع ملاحظة متابعة دفعة التأمين خلال 72 ساعة.",
+    "createdAt": "2026-03-27T16:15:00.000Z",
+    "readAt": null
+  },
+  {
+    "id": "demo-notification-04",
+    "contractId": "contract-rima",
+    "type": "contract-terminated",
+    "severity": "high",
+    "title": "طلب إنهاء مبكر لعقد ريما خليل",
+    "message": "تم فتح إشعار داخلي لمراجعة الإنهاء المبكر واسترداد جزء من التأمين بعد المعاينة.",
+    "createdAt": "2026-03-27T11:20:00.000Z",
+    "readAt": "2026-03-27T13:10:00.000Z"
+  },
+  {
+    "id": "demo-notification-05",
+    "contractId": "contract-samer",
+    "type": "contract-renewed",
+    "severity": "info",
+    "title": "تمديد قصير لعقد سامر حلاق",
+    "message": "جرى تمديد العقد شهراً إضافياً بانتظار توقيع النسخة السنوية الجديدة.",
+    "createdAt": "2026-03-26T14:00:00.000Z",
+    "readAt": "2026-03-26T15:30:00.000Z"
+  },
+  {
+    "id": "demo-notification-06",
+    "contractId": "contract-lina",
+    "type": "contract-terminated",
+    "severity": "high",
+    "title": "إنهاء عقد لينا يونس بسبب الانتقال",
+    "message": "المكتب اعتمد الإنهاء بتاريخ 26 آذار مع إبقاء ملاحظة على فحص الوحدة قبل إعادة النشر.",
+    "createdAt": "2026-03-26T09:25:00.000Z",
+    "readAt": null
+  },
+  {
+    "id": "demo-notification-07",
+    "contractId": "contract-rima",
+    "type": "contract-renewed",
+    "severity": "info",
+    "title": "إشعار موافقة مالك على تجديد عقد ريما",
+    "message": "المالك وافق على التجديد السنوي بالقيمة الحالية بعد إرسال الملحق التعاقدي.",
+    "createdAt": "2026-03-25T18:40:00.000Z",
+    "readAt": "2026-03-25T19:05:00.000Z"
+  },
+  {
+    "id": "demo-notification-08",
+    "contractId": "contract-samer",
+    "type": "contract-terminated",
+    "severity": "warning",
+    "title": "إنذار قبل إنهاء عقد سامر",
+    "message": "تم فتح إنذار داخلي قبل الإنهاء النهائي لمراجعة المتأخرات المرافقة للعقد.",
+    "createdAt": "2026-03-25T13:12:00.000Z",
+    "readAt": "2026-03-25T14:20:00.000Z"
+  },
+  {
+    "id": "demo-notification-09",
+    "contractId": "contract-lina",
+    "type": "contract-renewed",
+    "severity": "info",
+    "title": "جدولة تجديد عقد لينا يونس",
+    "message": "الموظف حدد موعد توقيع الملحق الجديد صباح السبت وتم إرسال تذكير داخلي للفريق.",
+    "createdAt": "2026-03-24T10:05:00.000Z",
+    "readAt": null
+  },
+  {
+    "id": "demo-notification-10",
+    "contractId": "contract-rima",
+    "type": "contract-renewed",
+    "severity": "warning",
+    "title": "تجديد يحتاج مراجعة التأمين",
+    "message": "التجديد جاهز لكن توجد ملاحظة على بند التأمين ويجب تثبيته قبل الطباعة النهائية.",
+    "createdAt": "2026-03-24T08:00:00.000Z",
+    "readAt": null
+  },
+  {
+    "id": "demo-notification-11",
+    "contractId": "contract-samer",
+    "type": "contract-renewed",
+    "severity": "info",
+    "title": "تأكيد استلام ملحق تجديد سامر",
+    "message": "الفريق استلم نسخة موقعة وأصبح الملف جاهزاً للأرشفة الرقمية.",
+    "createdAt": "2026-03-23T17:30:00.000Z",
+    "readAt": "2026-03-23T18:00:00.000Z"
+  },
+  {
+    "id": "demo-notification-12",
+    "contractId": "contract-lina",
+    "type": "contract-terminated",
+    "severity": "high",
+    "title": "تأكيد إخلاء الوحدة A-3",
+    "message": "تم تأكيد إخلاء الوحدة وربط الإشعار بجدولة تنظيف وصيانة خفيفة قبل إعادة العرض.",
+    "createdAt": "2026-03-22T12:40:00.000Z",
+    "readAt": "2026-03-22T13:00:00.000Z"
+  },
+  {
+    "id": "demo-notification-13",
+    "contractId": "contract-rima",
+    "type": "contract-terminated",
+    "severity": "warning",
+    "title": "مراجعة مستندات الإنهاء لريما",
+    "message": "المطلوب التأكد من توقيع الاستلام النهائي وصور العدادات قبل إغلاق الإشعار.",
+    "createdAt": "2026-03-21T09:10:00.000Z",
+    "readAt": "2026-03-21T11:45:00.000Z"
+  },
+  {
+    "id": "demo-notification-14",
+    "contractId": "contract-samer",
+    "type": "contract-renewed",
+    "severity": "info",
+    "title": "إشعار متابعة بعد تجديد سامر",
+    "message": "أضيفت متابعة بعد 30 يوماً للتأكد من انتظام السداد بعد التجديد الأخير.",
+    "createdAt": "2026-03-20T07:55:00.000Z",
+    "readAt": "2026-03-20T08:20:00.000Z"
+  }
+]

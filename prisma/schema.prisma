@@ -1,0 +1,426 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Future security models for auth audit logs and DB-backed rate limiting
+// are documented in prisma/auth-security.proposal.prisma and are not active yet.
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+}
+
+// Enums لتوحيد الحالات
+enum Role {
+  ADMIN
+  AGENT
+}
+
+enum PropertyStatus {
+  AVAILABLE
+  RENTED
+  MAINTENANCE
+}
+
+enum PaymentStatus {
+  PAID
+  PENDING
+  OVERDUE
+  CANCELLED
+}
+
+enum ListingOfferType {
+  SALE
+  RENT
+}
+
+enum ListingLifecycleStatus {
+  DRAFT
+  PUBLISHED
+  REVIEW
+  RESERVED
+  SOLD
+  RENTED
+  REJECTED
+}
+
+enum ContactRequestStatus {
+  NEW
+  CONTACTED
+  CLOSED
+}
+
+enum MaintenancePriority {
+  NORMAL
+  URGENT
+}
+
+enum MaintenanceStatus {
+  NEW
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum NotificationChannel {
+  EMAIL
+  WHATSAPP
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+  SKIPPED
+}
+
+// 1. Agency (المستأجر الأساسي - Tenant)
+model Agency {
+  id          String   @id @default(uuid())
+  name        String
+  email       String   @unique
+  phone       String?
+  address     String?
+  logoUrl     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // العلاقات العكسية
+  users      User[]
+  properties Property[]
+  contracts  Contract[]
+  tenants    Tenant[]
+  payments   Payment[]
+  maintenanceRequests MaintenanceRequest[]
+  notificationLogs NotificationLog[]
+}
+
+// 2. User (الموظف/المدير)
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  role      Role     @default(AGENT)
+  authId    String   @unique // الربط مع Supabase Auth ID
+  
+  agencyId  String
+  agency    Agency   @relation(fields: [agencyId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([agencyId])
+}
+
+// 3. Property (العقار - مبنى أو مجمع)
+model Property {
+  id          String         @id @default(uuid())
+  title       String
+  address     String
+  type        String         // سكني، تجاري، إلخ
+  description String?
+  images      String[]
+  
+  agencyId    String
+  agency      Agency         @relation(fields: [agencyId], references: [id])
+  
+  units       Unit[]
+  payments    Payment[]      // للربط المباشر للإيرادات بالعقار
+  maintenanceRequests MaintenanceRequest[]
+
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([agencyId])
+}
+
+// 4. Unit (الوحدة - شقة، محل)
+model Unit {
+  id          String         @id @default(uuid())
+  unitNumber  String
+  floor       Int?
+  rooms       Int?
+  areaSqM     Float?
+  basePrice   Decimal
+  status      PropertyStatus @default(AVAILABLE)
+  
+  propertyId  String
+  property    Property       @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  contracts   Contract[]
+
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+// 5. Tenant (المستأجر)
+model Tenant {
+  id             String   @id @default(uuid())
+  fullName       String
+  nationalId     String   // رقم الهوية/الإقامة
+  email          String?
+  phone          String
+  
+  agencyId       String
+  agency         Agency   @relation(fields: [agencyId], references: [id])
+  
+  contracts      Contract[]
+  payments       Payment[]
+  maintenanceRequests MaintenanceRequest[]
+  sessions       TenantSession[]
+  notificationLogs NotificationLog[]
+
+  portalEmail    String?  @unique
+  passwordHash   String?
+  portalEnabled  Boolean  @default(false)
+  lastLoginAt    DateTime?
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([agencyId])
+  @@index([nationalId])
+}
+
+// 6. Contract (العقد)
+model Contract {
+  id             String   @id @default(uuid())
+  startDate      DateTime
+  endDate        DateTime
+  rentAmount     Decimal  // القيمة الإيجارية الدورية
+  pdfUrl         String?  // رابط ملف العقد
+  isActive       Boolean  @default(true)
+
+  unitId         String
+  unit           Unit     @relation(fields: [unitId], references: [id])
+  
+  tenantId       String
+  tenant         Tenant   @relation(fields: [tenantId], references: [id])
+  
+  agencyId       String
+  agency         Agency   @relation(fields: [agencyId], references: [id])
+
+  payments       Payment[]
+  maintenanceRequests MaintenanceRequest[]
+  notificationLogs NotificationLog[]
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([agencyId])
+  @@index([tenantId])
+}
+
+// 7. Payment (الدفعات المالية)
+model Payment {
+  id             String        @id @default(uuid())
+  amount         Decimal
+  dueDate        DateTime
+  paidDate       DateTime?
+  status         PaymentStatus @default(PENDING)
+  notes          String?
+
+  contractId     String
+  contract       Contract      @relation(fields: [contractId], references: [id])
+
+  propertyId     String?       // لسهولة الاستعلام عن إيرادات العقار
+  property       Property?     @relation(fields: [propertyId], references: [id])
+
+  tenantId       String
+  tenant         Tenant        @relation(fields: [tenantId], references: [id])
+
+  agencyId       String
+  agency         Agency        @relation(fields: [agencyId], references: [id])
+
+  notificationLogs NotificationLog[]
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([agencyId])
+  @@index([dueDate])
+  @@index([status])
+}
+
+// 8. OwnerAccount (مالك العقار في السوق المفتوح)
+model OwnerAccount {
+  id             String   @id @default(uuid())
+  email          String   @unique
+  fullName       String
+  phone          String?
+  city           String?
+  authId         String?  @unique
+  isVerified     Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  listings       MarketplaceListing[]
+  contactRequests ContactRequest[]
+}
+
+model TenantSession {
+  id          String   @id @default(uuid())
+  tokenHash   String   @unique
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+  lastSeenAt  DateTime @default(now())
+
+  tenantId    String
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([expiresAt])
+}
+
+model MaintenanceRequest {
+  id            String              @id @default(uuid())
+  title         String
+  description   String
+  priority      MaintenancePriority @default(NORMAL)
+  status        MaintenanceStatus   @default(NEW)
+  scheduledFor  DateTime?
+  completedAt   DateTime?
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenantId      String
+  tenant        Tenant              @relation(fields: [tenantId], references: [id])
+
+  contractId    String
+  contract      Contract            @relation(fields: [contractId], references: [id], onDelete: Cascade)
+
+  agencyId      String
+  agency        Agency              @relation(fields: [agencyId], references: [id])
+
+  propertyId    String?
+  property      Property?           @relation(fields: [propertyId], references: [id])
+
+  notificationLogs NotificationLog[]
+
+  @@index([tenantId])
+  @@index([contractId])
+  @@index([agencyId])
+  @@index([status])
+}
+
+model NotificationLog {
+  id                    String             @id @default(uuid())
+  channel               NotificationChannel
+  status                NotificationStatus  @default(PENDING)
+  template              String
+  recipient             String
+  subject               String?
+  bodyPreview           String?
+  errorMessage          String?
+  sentAt                DateTime?
+  createdAt             DateTime            @default(now())
+
+  agencyId              String
+  agency                Agency              @relation(fields: [agencyId], references: [id])
+
+  tenantId              String?
+  tenant                Tenant?             @relation(fields: [tenantId], references: [id])
+
+  contractId            String?
+  contract              Contract?           @relation(fields: [contractId], references: [id])
+
+  paymentId             String?
+  payment               Payment?            @relation(fields: [paymentId], references: [id])
+
+  maintenanceRequestId  String?
+  maintenanceRequest    MaintenanceRequest? @relation(fields: [maintenanceRequestId], references: [id])
+
+  @@index([agencyId])
+  @@index([tenantId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+// 9. MarketplaceListing (إعلان عقاري عام للمنصة)
+model MarketplaceListing {
+  id               String                  @id @default(uuid())
+  slug             String                  @unique
+  title            String
+  description      String?
+  governorate      String
+  district         String
+  neighborhood     String
+  addressDetails   String?
+  offerType        ListingOfferType
+  lifecycleStatus  ListingLifecycleStatus  @default(DRAFT)
+  priceValue       Decimal
+  priceLabel       String
+  paymentPeriod    String?
+  areaSqm          Int?
+  rooms            Int?
+  bathrooms        Int?
+  floor            String?
+  furnishing       String?
+  ownership        String?
+  highlight        String?
+  features         String[]
+  suitableFor      String[]
+  contactName      String?
+  contactPhone     String?
+  whatsappNumber   String?
+  isVerified       Boolean                 @default(false)
+  publishedAt      DateTime?
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+
+  ownerId          String
+  owner            OwnerAccount            @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  images           ListingImage[]
+  contactRequests  ContactRequest[]
+
+  @@index([ownerId])
+  @@index([governorate])
+  @@index([offerType])
+  @@index([lifecycleStatus])
+}
+
+// 10. ListingImage (صور الإعلان)
+model ListingImage {
+  id          String             @id @default(uuid())
+  url         String
+  caption     String?
+  sortOrder   Int                @default(0)
+  isPrimary   Boolean            @default(false)
+  createdAt   DateTime           @default(now())
+
+  listingId   String
+  listing     MarketplaceListing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@index([listingId])
+}
+
+// 11. ContactRequest (طلبات تواصل/معاينة)
+model ContactRequest {
+  id             String               @id @default(uuid())
+  fullName       String
+  phone          String
+  message        String?
+  preferredTime  String?
+  status         ContactRequestStatus @default(NEW)
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+
+  listingId      String
+  listing        MarketplaceListing   @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  ownerId        String?
+  owner          OwnerAccount?        @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+
+  @@index([listingId])
+  @@index([status])
+}
+
+// Future proposal only:
+// Bulk contract-renew history persistence is intentionally NOT active yet.
+// When DB connectivity becomes stable, use prisma/bulk-renew-history.proposal.prisma
+// as the source for adding historical run models to this schema.

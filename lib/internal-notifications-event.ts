@@ -1,0 +1,1 @@
+export const INTERNAL_NOTIFICATIONS_CHANGED_EVENT = 'internal-notifications:changed'

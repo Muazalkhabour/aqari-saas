@@ -1,0 +1,18 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="1600" height="900" fill="#F5F1EB"/>
+<rect y="700" width="1600" height="200" fill="#C9A17F"/>
+<rect x="104" y="108" width="1392" height="560" rx="36" fill="#FCFBF8"/>
+<rect x="148" y="150" width="1304" height="472" rx="28" fill="url(#a)"/>
+<rect x="516" y="150" width="22" height="472" fill="#E8E2D8"/>
+<rect x="892" y="150" width="22" height="472" fill="#E8E2D8"/>
+<rect x="148" y="372" width="1304" height="14" fill="#E8E2D8"/>
+<rect x="204" y="548" width="1114" height="18" rx="9" fill="#C6B8A8"/>
+<rect x="184" y="580" width="48" height="120" rx="20" fill="#8A6E56"/>
+<rect x="1368" y="580" width="48" height="120" rx="20" fill="#8A6E56"/>
+<rect x="680" y="560" width="240" height="110" rx="28" fill="#F8F4ED"/>
+<rect x="724" y="596" width="152" height="16" rx="8" fill="#D5C7B8"/>
+<rect x="762" y="626" width="76" height="12" rx="6" fill="#E5DBCF"/>
+<defs>
+<linearGradient id="a" x1="800" y1="150" x2="800" y2="622" gradientUnits="userSpaceOnUse"><stop stop-color="#D9E9FF"/><stop offset="1" stop-color="#FEF6ED"/></linearGradient>
+</defs>
+</svg>

@@ -1,0 +1,117 @@
+// Proposal only. Do NOT merge these models into schema.prisma until database
+// credentials are stable and the team is ready to run a real Prisma migration.
+//
+// الهدف من هذا الملف:
+// - نقل التخزين الحالي من data/bulk-renew-last-result.json إلى قاعدة البيانات.
+// - الاحتفاظ بتاريخ جميع عمليات التجديد الجماعي، وليس فقط آخر نتيجة.
+// - ربط كل تشغيل بالعقود والوكالة والمستخدم الذي أطلق العملية عند توفره.
+//
+// Suggested enums
+
+enum BulkRenewRunStatus {
+  COMPLETED
+  PARTIAL
+  FAILED
+}
+
+enum BulkRenewItemStatus {
+  RENEWED
+  FAILED
+  SKIPPED
+}
+
+// Suggested aggregate run model
+//
+// Mapping from current JSON storage:
+// - latestResult.id                 -> BulkRenewRun.id
+// - latestResult.generatedAt        -> BulkRenewRun.executedAt
+// - latestResult.successCount       -> BulkRenewRun.successCount
+// - latestResult.failedCount        -> BulkRenewRun.failedCount
+// - latestResult.extensionMonths    -> BulkRenewRun.extensionMonths
+// - latestResult.rentAdjustment     -> BulkRenewRun.rentAdjustment
+// - history[]                       -> ordered BulkRenewRun rows
+
+model BulkRenewRun {
+  id                String             @id @default(uuid())
+  agencyId          String
+  agency            Agency             @relation(fields: [agencyId], references: [id])
+
+  initiatedByUserId String?
+  initiatedByUser   User?              @relation("BulkRenewRunInitiator", fields: [initiatedByUserId], references: [id], onDelete: SetNull)
+
+  status            BulkRenewRunStatus @default(COMPLETED)
+  executedAt        DateTime           @default(now())
+  extensionMonths   Int
+  rentAdjustment    Decimal            @default(0)
+  successCount      Int                @default(0)
+  failedCount       Int                @default(0)
+  totalSelected     Int                @default(0)
+  source            String?            // bulk-renew-page | dashboard-quick-action | api | future scheduler
+  notes             String?
+
+  items             BulkRenewRunItem[]
+
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  @@index([agencyId, executedAt])
+  @@index([initiatedByUserId])
+  @@index([status, executedAt])
+}
+
+// Suggested per-contract result model
+//
+// We intentionally denormalize a few fields like tenant/property labels so that
+// exports and audit screens remain stable even if later contract metadata changes.
+
+model BulkRenewRunItem {
+  id                 String             @id @default(uuid())
+  runId              String
+  run                BulkRenewRun       @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  contractId         String
+  contract           Contract           @relation(fields: [contractId], references: [id])
+
+  status             BulkRenewItemStatus
+  tenantNameSnapshot String
+  propertyTitleSnapshot String
+  unitNumberSnapshot String
+
+  previousEndDate    DateTime
+  nextEndDate        DateTime?
+  previousRentAmount Decimal
+  nextRentAmount     Decimal?
+
+  errorCode          String?
+  errorMessage       String?
+
+  createdAt          DateTime           @default(now())
+
+  @@index([runId, status])
+  @@index([contractId, createdAt])
+}
+
+// Suggested additions to existing active models once migration is approved:
+//
+// model Agency {
+//   ...
+//   bulkRenewRuns BulkRenewRun[]
+// }
+//
+// model User {
+//   ...
+//   initiatedBulkRenewRuns BulkRenewRun[] @relation("BulkRenewRunInitiator")
+// }
+//
+// model Contract {
+//   ...
+//   bulkRenewRunItems BulkRenewRunItem[]
+// }
+//
+// Recommended migration order later:
+// 1. Add enums + models above to active schema.prisma.
+// 2. Add back-relations to Agency/User/Contract.
+// 3. Run prisma generate + migration.
+// 4. Backfill from data/bulk-renew-last-result.json history array.
+// 5. Switch lib/bulk-renew-summary.ts from JSON file to Prisma.
+// 6. Keep JSON fallback temporarily only if DB is unavailable.

@@ -1,0 +1,19 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="1600" height="900" fill="#EFF4F1"/>
+<rect y="562" width="1600" height="338" fill="#B7A18F"/>
+<rect x="128" y="114" width="1344" height="420" rx="34" fill="#F9FBFA"/>
+<rect x="174" y="154" width="428" height="252" rx="24" fill="#E2ECE7"/>
+<rect x="216" y="196" width="344" height="168" rx="20" fill="url(#a)"/>
+<rect x="702" y="168" width="614" height="74" rx="22" fill="#607566"/>
+<rect x="724" y="258" width="176" height="176" rx="26" fill="#F5FAF6"/>
+<rect x="930" y="258" width="176" height="176" rx="26" fill="#E7F0EB"/>
+<rect x="1136" y="258" width="148" height="176" rx="26" fill="#F8FBF9"/>
+<rect x="770" y="298" width="84" height="16" rx="8" fill="#C9D7D0"/>
+<rect x="978" y="298" width="84" height="16" rx="8" fill="#C9D7D0"/>
+<rect x="1170" y="298" width="80" height="16" rx="8" fill="#CBD8D1"/>
+<ellipse cx="800" cy="712" rx="350" ry="88" fill="url(#b)"/>
+<defs>
+<linearGradient id="a" x1="388" y1="196" x2="388" y2="364" gradientUnits="userSpaceOnUse"><stop stop-color="#D8F1F5"/><stop offset="1" stop-color="#FBFEFC"/></linearGradient>
+<linearGradient id="b" x1="450" y1="712" x2="1150" y2="712" gradientUnits="userSpaceOnUse"><stop stop-color="#DDEBE4"/><stop offset="0.5" stop-color="#FBFEFC"/><stop offset="1" stop-color="#E8E4DC"/></linearGradient>
+</defs>
+</svg>

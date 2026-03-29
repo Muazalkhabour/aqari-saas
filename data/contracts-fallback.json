@@ -1,0 +1,53 @@
+[
+  {
+    "id": "contract-rima",
+    "tenantId": "tenant-rima-khalil",
+    "tenantName": "ريما خليل",
+    "tenantEmail": "rima@tenant.aqari.sy",
+    "tenantPhone": "+963 944 221 110",
+    "tenantNationalId": "SY-1001",
+    "propertyId": "property-damascus-mezzeh",
+    "propertyTitle": "شقة عائلية في المزة الغربية",
+    "propertyAddress": "دمشق - المزة الغربية",
+    "unitId": "unit-damascus-b12",
+    "unitNumber": "B-12",
+    "startDate": "2025-06-11",
+    "endDate": "2026-04-06",
+    "rentAmount": 420,
+    "isActive": true
+  },
+  {
+    "id": "contract-samer",
+    "tenantId": "tenant-samer-hallaq",
+    "tenantName": "سامر حلاق",
+    "tenantEmail": "samer@tenant.aqari.sy",
+    "tenantPhone": "+963 933 200 515",
+    "tenantNationalId": "SY-1002",
+    "propertyId": "property-latakia-ziraa",
+    "propertyTitle": "شقة مفروشة في مشروع الزراعة",
+    "propertyAddress": "اللاذقية - مشروع الزراعة",
+    "unitId": "unit-latakia-sea5",
+    "unitNumber": "Sea-5",
+    "startDate": "2025-11-28",
+    "endDate": "2026-05-11",
+    "rentAmount": 320,
+    "isActive": true
+  },
+  {
+    "id": "contract-lina",
+    "tenantId": "tenant-lina-younes",
+    "tenantName": "لينا يونس",
+    "tenantEmail": "lina@tenant.aqari.sy",
+    "tenantPhone": "+963 955 415 320",
+    "tenantNationalId": "SY-1003",
+    "propertyId": "property-aleppo-hamdaniyeh",
+    "propertyTitle": "شقة للإيجار في الحمدانية",
+    "propertyAddress": "حلب - الحمدانية السادسة",
+    "unitId": "unit-aleppo-a3",
+    "unitNumber": "A-3",
+    "startDate": "2026-01-17",
+    "endDate": "2026-07-18",
+    "rentAmount": 185,
+    "isActive": true
+  }
+]

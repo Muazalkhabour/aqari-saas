@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Aqari SaaS
 
-## Getting Started
+منصة عقارية عربية مبنية بـ Next.js وموجهة لسوق العقارات السوري. المشروع يجمع بين عروض تجريبية جاهزة، وصفحات تفاصيل غنية بالصور، وتجربة محلية كاملة للمالك بدون قاعدة بيانات حالياً.
 
-First, run the development server:
+## ما الذي يعمل الآن؟
+
+- عرض عقارات تجريبية سورية مع صور ومعارض وسلايدر وتكبير للصور.
+- صفحة رفع صور حقيقية من المالك وحفظها محلياً داخل المتصفح.
+- صفحة معاينة للإعلان قبل النشر.
+- نشر محلي للعقار من صفحة المعاينة بدون خادم.
+- صفحة "عقاراتي" لإدارة العقارات المحلية وتغيير حالتها وحذفها.
+- نموذج طلب تواصل داخل صفحة التفاصيل مع حفظ الطلبات محلياً.
+- دمج العقارات المحلية المنشورة داخل صفحة البحث.
+- خريطة تفاعلية داخل صفحة البحث مع إمكانية تحديد موقع المستخدم وعرض الأقرب إليه.
+- لوحة تشغيلية داخل الداشبورد لتنبيهات قرب انتهاء العقود والدفعات المتأخرة وطلبات الصيانة.
+- بوابة مستأجر تجريبية لعرض العقد والفواتير وتقديم طلبات الصيانة.
+- مخطط Prisma مستقبلي جاهز لتوسعة النظام عند إضافة قاعدة بيانات فعلية.
+
+## تشغيل المشروع
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+ثم افتح `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## متغيرات أمنية مفيدة
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `TENANT_SESSION_SECRET`: يستخدم لتوقيع جلسات demo الخاصة بالمستأجر داخل development فقط.
+- `ALLOWED_EXTERNAL_LOGO_HOSTS`: قائمة مفصولة بفواصل للدومينات المسموح تحميل شعارات PDF منها، مثل `cdn.example.com,images.example.org`.
+- `RATE_LIMIT_STORAGE_DRIVER`: يدعم حالياً `file` أو `redis`. الوضع الافتراضي هو `file`.
+- `UPSTASH_REDIS_REST_URL` و `UPSTASH_REDIS_REST_TOKEN`: مطلوبة عندما يكون `RATE_LIMIT_STORAGE_DRIVER=redis`.
+- `AUTH_RATE_LIMIT_REDIS_KEY`: اختياري لتخصيص المفتاح الذي يحفظ JSON الخاص بعدادات الدخول داخل Redis.
 
-## Learn More
+إذا تُرك `ALLOWED_EXTERNAL_LOGO_HOSTS` فارغاً، فلن يتم تحميل أي شعار خارجي في PDF إلا من نفس أصل التطبيق أو من المسارات المحلية و `data:image/...`.
 
-To learn more about Next.js, take a look at the following resources:
+## تخزين الحماية الخاصة بالمصادقة
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- تحديد معدل محاولات الدخول يعتمد حالياً على adapter ملفي افتراضي داخل `lib/rate-limit-store.ts` ويكتب البيانات في `data/auth-rate-limits.json`.
+- يمكن التحويل إلى Redis REST بدون تعديل login actions عبر `RATE_LIMIT_STORAGE_DRIVER=redis`.
+- سجل محاولات الدخول الناجحة والمحظورة والفاشلة يُحفظ حالياً في `data/auth-login-audit.json` عبر `lib/auth-audit.ts`.
+- منطق الـ rate limiting بقي داخل `lib/rate-limit.ts`، بينما تم فصل طبقة التخزين حتى يصبح استبدالها لاحقاً مباشراً.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## صفحة المتابعة الداخلية
 
-## Deploy on Vercel
+- تمت إضافة صفحة داخلية لعرض السجل الأمني في `/dashboard/auth-audit`.
+- الصفحة تدعم فلترة حسب نوع الدخول والنتيجة والبحث النصي، وتعرض أيضاً نوع التخزين الحالي للـ rate limit: ملف محلي أو Redis.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## الترحيل لاحقاً إلى Redis أو قاعدة البيانات
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- عند تجهيز البنية الإنتاجية، يمكن استبدال `getRateLimitStore()` داخل `lib/rate-limit-store.ts` بمخزن Redis أو قاعدة بيانات بدون تعديل مسارات تسجيل الدخول.
+- إذا كان Redis متاحاً، الأفضل استخدامه لعدادات rate limit والإبقاء على audit log في قاعدة البيانات.
+- إذا لم يتوفر Redis، يوجد اقتراح Prisma جاهز في `prisma/auth-security.proposal.prisma` لتفعيل تخزين `AuthAuditLog` و `AuthRateLimitBucket` لاحقاً.
+- يفضّل إبقاء التخزين الملفي فقط للتطوير المحلي أو كخطة fallback مؤقتة.
+
+## الوضع المحلي بدون قاعدة بيانات
+
+بعض المزايا تعمل حالياً بالمتصفح فقط باستخدام `localStorage` لأن المشروع لا يعتمد بعد على قاعدة بيانات فعلية:
+
+- الصور التي يرفعها المالك
+- الإعلانات المحلية المنشورة
+- طلبات التواصل الواردة
+- لوحة "عقاراتي"
+
+هذا يعني أن البيانات:
+
+- تظهر فقط داخل نفس المتصفح والجهاز
+- تختفي إذا تم مسح بيانات المتصفح
+- لا تتزامن بين الأجهزة أو المستخدمين
+
+## المسارات المهمة
+
+- `/dashboard`: الصفحة الرئيسية للمنصة
+- `/search`: البحث ودمج العقارات التجريبية مع المنشورة محلياً
+- `/list-property`: نموذج إضافة عقار
+- `/list-property/photos`: رفع الصور الحقيقية
+- `/list-property/preview`: معاينة الإعلان قبل النشر
+- `/my-properties`: لوحة المالك المحلية
+- `/tenant-portal`: بوابة المستأجر للعقود والفواتير والصيانة
+- `/properties/[id]`: صفحة تفاصيل العقار
+
+## ملاحظات التطوير
+
+- المخطط الموجود في `prisma/schema.prisma` أصبح جاهزاً لنماذج المالكين والإعلانات والصور وطلبات التواصل.
+- عند ربط قاعدة بيانات فعلية، يمكن نقل طبقة `lib/local-marketplace.ts` إلى طبقة API أو Server Actions مع الإبقاء على نفس التدفق العام.
+
+## التحقق
+
+```bash
+npm run lint
+npm run build
+```

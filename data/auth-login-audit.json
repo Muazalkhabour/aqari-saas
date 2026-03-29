@@ -1,0 +1,24 @@
+[
+  {
+    "id": "auth-audit-1774794986145-5gpucw",
+    "scope": "owner-login",
+    "outcome": "SUCCESS",
+    "identifierHash": "d39e892cdec8c5254f8b010a01aabc6eed5050189e4f328c4d40fde4ca44af30",
+    "identifierLabel": "ad***@muaztech.com",
+    "clientIp": "::1",
+    "reason": "Owner login succeeded",
+    "retryAfterSeconds": null,
+    "createdAt": "2026-03-29T14:36:26.145Z"
+  },
+  {
+    "id": "auth-audit-1774789020888-l7jgx3",
+    "scope": "tenant-login",
+    "outcome": "SUCCESS",
+    "identifierHash": "fd4d9d90b4c7c5e1e15c44b99b2592c31fcc97ea24810db7071f7eef9665cbf5",
+    "identifierLabel": "ri***@tenant.aqari.sy",
+    "clientIp": "::1",
+    "reason": "Tenant login succeeded",
+    "retryAfterSeconds": null,
+    "createdAt": "2026-03-29T12:57:00.888Z"
+  }
+]
