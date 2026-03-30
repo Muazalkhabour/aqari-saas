@@ -1,93 +1,42 @@
-# Aqari SaaS
+# 🏢 Aqari SaaS - Syrian Real Estate Platform
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/8189812a-9dce-46d9-a91b-9959787e89c7" width="600px">
+</p>
 
-منصة عقارية عربية مبنية بـ Next.js وموجهة لسوق العقارات السوري. المشروع يجمع بين عروض تجريبية جاهزة، وصفحات تفاصيل غنية بالصور، وتجربة محلية كاملة للمالك بدون قاعدة بيانات حالياً.
+Welcome to **Aqari SaaS**, a modern, high-performance platform designed specifically for the Syrian real estate market. This platform provides a seamless experience for buyers, sellers, and agents to connect and transact.
 
-## ما الذي يعمل الآن؟
+## 🌐 Live Demo
 
-- عرض عقارات تجريبية سورية مع صور ومعارض وسلايدر وتكبير للصور.
-- صفحة رفع صور حقيقية من المالك وحفظها محلياً داخل المتصفح.
-- صفحة معاينة للإعلان قبل النشر.
-- نشر محلي للعقار من صفحة المعاينة بدون خادم.
-- صفحة "عقاراتي" لإدارة العقارات المحلية وتغيير حالتها وحذفها.
-- نموذج طلب تواصل داخل صفحة التفاصيل مع حفظ الطلبات محلياً.
-- دمج العقارات المحلية المنشورة داخل صفحة البحث.
-- خريطة تفاعلية داخل صفحة البحث مع إمكانية تحديد موقع المستخدم وعرض الأقرب إليه.
-- لوحة تشغيلية داخل الداشبورد لتنبيهات قرب انتهاء العقود والدفعات المتأخرة وطلبات الصيانة.
-- بوابة مستأجر تجريبية لعرض العقد والفواتير وتقديم طلبات الصيانة.
-- مخطط Prisma مستقبلي جاهز لتوسعة النظام عند إضافة قاعدة بيانات فعلية.
+You can check out the live site here: **[https://aqari-saas.vercel.app/](https://aqari-saas.vercel.app/)**
 
-## تشغيل المشروع
+## ✨ Features
 
-```bash
-npm install
-npm run dev
-```
+* **Advanced Search:** Find properties with detailed filters.
+* **Property Listings:** Comprehensive listings with images and details.
+* **Agent Profiles:** Connect with trusted real estate professionals.
+* **User Dashboard:** Manage listings, favorites, and profile settings.
+* **Modern UI:** Clean, responsive design for a great user experience.
 
-ثم افتح `http://localhost:3000`.
+## 🛠️ Tech Stack
 
-## متغيرات أمنية مفيدة
+This project is built using the following technologies:
 
-- `TENANT_SESSION_SECRET`: يستخدم لتوقيع جلسات demo الخاصة بالمستأجر داخل development فقط.
-- `ALLOWED_EXTERNAL_LOGO_HOSTS`: قائمة مفصولة بفواصل للدومينات المسموح تحميل شعارات PDF منها، مثل `cdn.example.com,images.example.org`.
-- `RATE_LIMIT_STORAGE_DRIVER`: يدعم حالياً `file` أو `redis`. الوضع الافتراضي هو `file`.
-- `UPSTASH_REDIS_REST_URL` و `UPSTASH_REDIS_REST_TOKEN`: مطلوبة عندما يكون `RATE_LIMIT_STORAGE_DRIVER=redis`.
-- `AUTH_RATE_LIMIT_REDIS_KEY`: اختياري لتخصيص المفتاح الذي يحفظ JSON الخاص بعدادات الدخول داخل Redis.
+* **Framework:** Next.js 15 (Latest)
+* **Database:** Supabase (PostgreSQL)
+* **ORM:** Prisma
+* **Styling:** Tailwind CSS
+* **Deployment:** Vercel
 
-إذا تُرك `ALLOWED_EXTERNAL_LOGO_HOSTS` فارغاً، فلن يتم تحميل أي شعار خارجي في PDF إلا من نفس أصل التطبيق أو من المسارات المحلية و `data:image/...`.
+## 🚀 Getting Started
 
-## تخزين الحماية الخاصة بالمصادقة
+To run this project locally, follow these steps:
 
-- تحديد معدل محاولات الدخول يعتمد حالياً على adapter ملفي افتراضي داخل `lib/rate-limit-store.ts` ويكتب البيانات في `data/auth-rate-limits.json`.
-- يمكن التحويل إلى Redis REST بدون تعديل login actions عبر `RATE_LIMIT_STORAGE_DRIVER=redis`.
-- سجل محاولات الدخول الناجحة والمحظورة والفاشلة يُحفظ حالياً في `data/auth-login-audit.json` عبر `lib/auth-audit.ts`.
-- منطق الـ rate limiting بقي داخل `lib/rate-limit.ts`، بينما تم فصل طبقة التخزين حتى يصبح استبدالها لاحقاً مباشراً.
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/muazalkhabour/aqari-saas.git
+---
+### 👨‍💻 Developed by:
+**Muaz Alkhabour** - Founder of **MUAZ TECH** for Software and Digital Marketing.
 
-## صفحة المتابعة الداخلية
 
-- تمت إضافة صفحة داخلية لعرض السجل الأمني في `/dashboard/auth-audit`.
-- الصفحة تدعم فلترة حسب نوع الدخول والنتيجة والبحث النصي، وتعرض أيضاً نوع التخزين الحالي للـ rate limit: ملف محلي أو Redis.
-
-## الترحيل لاحقاً إلى Redis أو قاعدة البيانات
-
-- عند تجهيز البنية الإنتاجية، يمكن استبدال `getRateLimitStore()` داخل `lib/rate-limit-store.ts` بمخزن Redis أو قاعدة بيانات بدون تعديل مسارات تسجيل الدخول.
-- إذا كان Redis متاحاً، الأفضل استخدامه لعدادات rate limit والإبقاء على audit log في قاعدة البيانات.
-- إذا لم يتوفر Redis، يوجد اقتراح Prisma جاهز في `prisma/auth-security.proposal.prisma` لتفعيل تخزين `AuthAuditLog` و `AuthRateLimitBucket` لاحقاً.
-- يفضّل إبقاء التخزين الملفي فقط للتطوير المحلي أو كخطة fallback مؤقتة.
-
-## الوضع المحلي بدون قاعدة بيانات
-
-بعض المزايا تعمل حالياً بالمتصفح فقط باستخدام `localStorage` لأن المشروع لا يعتمد بعد على قاعدة بيانات فعلية:
-
-- الصور التي يرفعها المالك
-- الإعلانات المحلية المنشورة
-- طلبات التواصل الواردة
-- لوحة "عقاراتي"
-
-هذا يعني أن البيانات:
-
-- تظهر فقط داخل نفس المتصفح والجهاز
-- تختفي إذا تم مسح بيانات المتصفح
-- لا تتزامن بين الأجهزة أو المستخدمين
-
-## المسارات المهمة
-
-- `/dashboard`: الصفحة الرئيسية للمنصة
-- `/search`: البحث ودمج العقارات التجريبية مع المنشورة محلياً
-- `/list-property`: نموذج إضافة عقار
-- `/list-property/photos`: رفع الصور الحقيقية
-- `/list-property/preview`: معاينة الإعلان قبل النشر
-- `/my-properties`: لوحة المالك المحلية
-- `/tenant-portal`: بوابة المستأجر للعقود والفواتير والصيانة
-- `/properties/[id]`: صفحة تفاصيل العقار
-
-## ملاحظات التطوير
-
-- المخطط الموجود في `prisma/schema.prisma` أصبح جاهزاً لنماذج المالكين والإعلانات والصور وطلبات التواصل.
-- عند ربط قاعدة بيانات فعلية، يمكن نقل طبقة `lib/local-marketplace.ts` إلى طبقة API أو Server Actions مع الإبقاء على نفس التدفق العام.
-
-## التحقق
-
-```bash
-npm run lint
-npm run build
-```
+   
