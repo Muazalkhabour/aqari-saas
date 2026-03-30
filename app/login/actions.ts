@@ -14,29 +14,45 @@ type CookieToSet = {
   options?: CookieOptions
 }
 
+type RedirectOptions = {
+  email?: string
+  retryAfterSeconds?: number
+}
+
 const ownerLoginRateLimitPolicy: RateLimitPolicy = {
   maxAttempts: 5,
   windowMs: 10 * 60 * 1000,
   blockDurationMs: 15 * 60 * 1000,
 }
 
-function buildLoginRedirect(error: string, email?: string, retryAfterSeconds?: number) {
-  const params = new URLSearchParams({ error })
+function appendRedirectParams(basePath: string, error: string, options: RedirectOptions = {}) {
+  const [pathname, queryString] = basePath.split('?', 2)
+  const params = new URLSearchParams(queryString || '')
+  params.set('error', error)
 
-  if (email) {
-    params.set('email', email)
+  if (options.email) {
+    params.set('email', options.email)
   }
 
-  if (retryAfterSeconds && retryAfterSeconds > 0) {
-    params.set('retryAfter', String(retryAfterSeconds))
+  if (options.retryAfterSeconds && options.retryAfterSeconds > 0) {
+    params.set('retryAfter', String(options.retryAfterSeconds))
   }
 
-  return `/login?${params.toString()}`
+  return `${pathname}?${params.toString()}`
+}
+
+function buildLoginRedirect(error: string, email?: string, retryAfterSeconds?: number, returnPath?: string) {
+  return appendRedirectParams(returnPath || '/auth?mode=signin&role=manager', error, {
+    email,
+    retryAfterSeconds,
+  })
 }
 
 export async function signIn(formData: FormData) {
   const email = String(formData.get('email')).trim()
   const password = String(formData.get('password'))
+  const returnPath = String(formData.get('returnPath') || '').trim() || undefined
+  const successPath = String(formData.get('successPath') || '').trim() || '/dashboard'
   const normalizedEmail = email.toLowerCase()
   const requestHeaders = await headers()
   const clientIp = getClientIpFromHeaders(requestHeaders)
@@ -49,11 +65,11 @@ export async function signIn(formData: FormData) {
       clientIp,
       reason: 'Office auth provider is unavailable',
     })
-    redirect(isDevelopmentDemoModeEnabled() ? '/dashboard?mode=demo' : buildLoginRedirect('auth-unavailable', email))
+    redirect(isDevelopmentDemoModeEnabled() ? '/dashboard?mode=demo' : buildLoginRedirect('auth-unavailable', email, undefined, returnPath))
   }
 
   if (!email || !password) {
-    redirect(buildLoginRedirect('missing-fields', email))
+    redirect(buildLoginRedirect('missing-fields', email, undefined, returnPath))
   }
 
   const rateLimitTarget = {
@@ -72,7 +88,7 @@ export async function signIn(formData: FormData) {
       reason: 'Rate limit active before owner login attempt',
       retryAfterSeconds: rateLimitStatus.retryAfterSeconds,
     })
-    redirect(buildLoginRedirect('too-many-attempts', email, rateLimitStatus.retryAfterSeconds))
+    redirect(buildLoginRedirect('too-many-attempts', email, rateLimitStatus.retryAfterSeconds, returnPath))
   }
 
   const credentials = getSupabaseCredentials()
@@ -121,7 +137,8 @@ export async function signIn(formData: FormData) {
     redirect(buildLoginRedirect(
       failureStatus.limited ? 'too-many-attempts' : 'invalid-credentials',
       email,
-      failureStatus.retryAfterSeconds
+      failureStatus.retryAfterSeconds,
+      returnPath
     ))
   }
 
@@ -164,5 +181,5 @@ export async function signIn(formData: FormData) {
     }
   }
 
-  redirect('/dashboard')
+  redirect(successPath)
 }

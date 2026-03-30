@@ -58,7 +58,7 @@ export function OwnerPhotoUploader() {
           <div className="max-w-3xl">
             <h2 className="section-title text-xl font-bold text-slate-950 sm:text-2xl">ارفع صور العقار الحقيقية</h2>
             <p className="body-soft mt-2 text-sm text-[var(--muted)]">
-              هذه الصفحة تمنح المالك مساحة لرفع الصور الحقيقية ومعاينتها فوراً. في الوضع الحالي، يتم حفظها محلياً داخل نفس المتصفح بدلاً من قاعدة بيانات.
+              الصور القوية ترفع فرص المشاهدة والتواصل. ارفع صورك الآن وراجع شكل الإعلان قبل النشر النهائي.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -97,7 +97,7 @@ export function OwnerPhotoUploader() {
             ملاحظة عملية
           </div>
           <p className="body-soft mt-2 text-sm text-[var(--muted)]">
-            الرفع هنا يحفظ الصور محلياً داخل نفس المتصفح من أجل المعاينة فقط. هذا مناسب الآن لأنك لا تملك قاعدة بيانات، لكنه لن ينتقل إلى جهاز آخر أو متصفح آخر.
+            اختر صوراً واضحة للواجهة والصالة والغرف، لأن أول انطباع بصري هو أسرع طريق لزيادة الطلبات ورفع الثقة بإعلانك.
           </p>
         </div>
       </section>

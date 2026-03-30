@@ -1,4 +1,5 @@
 import { AutoDismissToast } from '@/components/auto-dismiss-toast'
+import { CreditCard, FileText, LifeBuoy, ShieldCheck } from 'lucide-react'
 import type { TenantPortalData } from '@/lib/rental-db'
 import { requireTenantSession } from '@/lib/tenant-session'
 import { getTenantPortalData } from '@/lib/rental-db'
@@ -90,11 +91,61 @@ export default async function TenantPortalPage({ searchParams }: TenantPortalPag
 
   const params = searchParams ? await searchParams : undefined
   const toast = buildPortalToast(params, tenant)
+  const activeContract = tenant.contracts.find((contract) => contract.isActive) || tenant.contracts[0]
+  const overduePaymentsCount = tenant.payments.filter((payment) => payment.status === 'OVERDUE').length
+  const openMaintenanceCount = tenant.maintenanceRequests.filter((request) => request.status === 'NEW' || request.status === 'IN_PROGRESS' || request.status === 'SCHEDULED').length
+  const contractUnitLabel = activeContract
+    ? 'unitNumber' in activeContract.unit && typeof activeContract.unit.unitNumber === 'string'
+      ? `${activeContract.unit.property.title} - الوحدة ${activeContract.unit.unitNumber}`
+      : activeContract.unit.property.title
+    : 'لا يوجد عقد نشط ظاهر لهذا الحساب حالياً.'
 
   return (
     <main className="min-h-screen px-4 py-6 sm:px-6 lg:px-8">
       <div className="mx-auto flex max-w-7xl flex-col gap-6">
         {toast ? <AutoDismissToast message={toast.message} tone={toast.tone} actions={toast.actions} /> : null}
+        <section className="rounded-[32px] border border-white/60 bg-[var(--surface)] p-6 shadow-[0_20px_60px_rgba(16,42,67,0.08)] sm:p-8">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-3xl">
+              <div className="eyebrow-text inline-flex items-center gap-2 rounded-full border border-emerald-800/10 bg-white/75 px-4 py-2 text-emerald-900">
+                <ShieldCheck className="h-4 w-4" />
+                بوابة المستأجر المبسطة
+              </div>
+              <h1 className="hero-title mt-4 text-[1.45rem] font-bold text-slate-950 sm:text-[1.85rem] lg:text-[2.3rem]">
+                ماذا تحتاج الآن: <span className="hero-highlight">العقد أم الدفعة أم الصيانة</span>؟
+              </h1>
+              <p className="hero-subtitle mt-3 max-w-2xl">
+                هذه الصفحة لم تعد تحاول عرض كل شيء بالتساوي. ابدأ بملخص العقد، ثم راجع الدفعات، وإذا كانت لديك مشكلة في الوحدة انتقل مباشرة إلى طلب الصيانة.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="grid gap-4 md:grid-cols-3">
+          <article className="rounded-[28px] border border-white/60 bg-white/90 p-5 shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
+            <div className="flex items-center gap-2 text-slate-950">
+              <FileText className="h-5 w-5 text-emerald-700" />
+              <div className="text-base font-bold">العقد الحالي</div>
+            </div>
+            <p className="mt-3 text-sm leading-7 text-slate-600">
+              {contractUnitLabel}
+            </p>
+          </article>
+          <article className="rounded-[28px] border border-white/60 bg-white/90 p-5 shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
+            <div className="flex items-center gap-2 text-slate-950">
+              <CreditCard className="h-5 w-5 text-emerald-700" />
+              <div className="text-base font-bold">الدفعات المتأخرة</div>
+            </div>
+            <p className="mt-3 text-sm leading-7 text-slate-600">لديك حالياً {overduePaymentsCount} دفعات متأخرة تحتاج مراجعة داخل البوابة.</p>
+          </article>
+          <article className="rounded-[28px] border border-white/60 bg-white/90 p-5 shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
+            <div className="flex items-center gap-2 text-slate-950">
+              <LifeBuoy className="h-5 w-5 text-emerald-700" />
+              <div className="text-base font-bold">طلبات الصيانة المفتوحة</div>
+            </div>
+            <p className="mt-3 text-sm leading-7 text-slate-600">يوجد {openMaintenanceCount} طلبات صيانة مفتوحة أو قيد المتابعة لهذا الحساب.</p>
+          </article>
+        </section>
         <TenantPortalDashboard tenant={tenant} />
       </div>
     </main>

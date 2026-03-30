@@ -110,7 +110,7 @@ export function BulkRenewReviewForm({ action, extensionMonths, contracts }: Bulk
         <div className="rounded-[28px] border border-white/60 bg-white/92 p-5 shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
           <div className="stat-label">نوع التنفيذ</div>
           <div className="mt-3 text-xl font-bold text-slate-950">تجديد مع حفظ السجل والإشعارات</div>
-          <p className="mt-2 text-sm text-slate-600">يشمل النشاط التاريخي والتنبيهات الداخلية والبريدية حيثما توفرت.</p>
+          <p className="mt-2 text-sm text-slate-600">يشمل السجل الكامل والتنبيهات المهمة لضمان متابعة أوضح بعد التنفيذ.</p>
         </div>
       </section>
 

@@ -98,14 +98,14 @@ export default async function BulkRenewContractsPage({ searchParams }: BulkRenew
             <div className="max-w-3xl">
               <div className="eyebrow-text inline-flex items-center gap-2 rounded-full border border-emerald-800/10 bg-white/70 px-4 py-2 text-emerald-900">
                 <RefreshCcw className="h-4 w-4" />
-                مراجعة قبل التجديد الجماعي
+                التجديد الجماعي
               </div>
               <h1 className="hero-title mt-4 max-w-[38rem] text-[1.55rem] font-bold text-slate-950 sm:text-[1.95rem] lg:text-[2.55rem]">
-                <span className="hero-line">تجديد العقود القريبة من الانتهاء</span>
-                <span className="hero-line mt-2 sm:mt-3">بمراجعة واحدة قبل التنفيذ</span>
+                <span className="hero-line">راجع العقود القريبة</span>
+                <span className="hero-line mt-2 sm:mt-3">ثم نفّذ التجديد دفعة واحدة</span>
               </h1>
               <p className="hero-subtitle mt-3 max-w-2xl">
-                اختر العقود التي ستجدد دفعة واحدة، ثم حدّد مدة التمديد والزيادة الإيجارية الموحدة قبل اعتماد العملية.
+                اختر العقود أولاً، ثم حدّد مدة التمديد والزيادة الموحدة قبل اعتماد العملية.
               </p>
             </div>
 
@@ -117,7 +117,7 @@ export default async function BulkRenewContractsPage({ searchParams }: BulkRenew
               <div className="rounded-2xl bg-slate-950 px-5 py-3 text-sm text-white">
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="h-4 w-4" />
-                  العقود القريبة الآن: {endingSoonContracts.length}
+                      القريبة الآن: {endingSoonContracts.length}
                 </div>
               </div>
             </div>
@@ -132,7 +132,7 @@ export default async function BulkRenewContractsPage({ searchParams }: BulkRenew
                 href={buildBulkRenewHref(months, filters.query, filters.propertyId)}
                 className={`rounded-full px-4 py-2 text-sm font-semibold ${months === extensionMonths ? 'ui-active-pill' : 'bg-slate-100 text-slate-700'}`}
               >
-                مراجعة تمديد {months} أشهر
+                تمديد {months} أشهر
               </Link>
             ))}
           </div>
@@ -145,7 +145,7 @@ export default async function BulkRenewContractsPage({ searchParams }: BulkRenew
           <form action="/contracts/bulk-renew" className="mt-5 grid gap-3 md:grid-cols-[1fr_15rem_auto]">
             <input type="hidden" name="months" value={String(extensionMonths)} />
             <div>
-              <label htmlFor="query" className="mb-1 block text-sm font-semibold text-slate-700">بحث بالمستأجر أو العقار</label>
+              <label htmlFor="query" className="mb-1 block text-sm font-semibold text-slate-700">بحث</label>
               <input id="query" name="query" defaultValue={filters.query} className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none" placeholder="اسم المستأجر أو العقار أو الوحدة" />
             </div>
             <div>
@@ -157,7 +157,7 @@ export default async function BulkRenewContractsPage({ searchParams }: BulkRenew
                 ))}
               </select>
             </div>
-            <button type="submit" className="btn-base btn-secondary self-end">تطبيق الفلاتر</button>
+            <button type="submit" className="btn-base btn-secondary self-end">تطبيق</button>
           </form>
 
           {propertyGroups.length > 0 ? (
@@ -173,7 +173,7 @@ export default async function BulkRenewContractsPage({ searchParams }: BulkRenew
                   >
                     <div className="text-sm font-semibold">{property.title}</div>
                     <div className="mt-2 text-3xl font-bold">{property.count}</div>
-                    <div className="mt-2 text-sm text-slate-600">مراجعة هذا العقار فقط</div>
+                    <div className="mt-2 text-sm text-slate-600">مراجعة هذا العقار</div>
                   </Link>
                 )
               })}
@@ -184,7 +184,7 @@ export default async function BulkRenewContractsPage({ searchParams }: BulkRenew
         {endingSoonContracts.length === 0 ? (
           <section className="rounded-[32px] border border-dashed border-slate-300 bg-white/88 p-8 text-center shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
             <h2 className="text-xl font-bold text-slate-950">لا توجد عقود قريبة من الانتهاء حالياً</h2>
-            <p className="mt-3 text-sm text-slate-600">عند ظهور عقود تنتهي قريباً ستظهر هنا للمراجعة الجماعية قبل التجديد.</p>
+            <p className="mt-3 text-sm text-slate-600">عند ظهور عقود تنتهي قريباً ستظهر هنا للمراجعة قبل التجديد.</p>
           </section>
         ) : (
           <BulkRenewReviewForm

@@ -124,7 +124,7 @@ export function LocalTenantPortal() {
         description: String(formData.get('description') || 'وصف مختصر للمشكلة'),
         priority: String(formData.get('priority') || 'عادي') as 'عادي' | 'عاجل',
       })
-      setFeedback('تم إرسال طلب الصيانة وحفظه محليًا. سيظهر فورًا ضمن لوحة التشغيل والتنبيهات.')
+      setFeedback('تم إرسال طلب الصيانة بنجاح، وستتم متابعته من فريق الإدارة وإشعارك بكل تحديث.')
     })
   }
 
@@ -139,12 +139,12 @@ export function LocalTenantPortal() {
           <div>
             <h2 className="section-title text-xl font-bold text-slate-950 sm:text-2xl">بوابة المستأجر</h2>
             <p className="body-soft mt-2 text-sm text-[var(--muted)]">
-              هذه نسخة MVP لعرض العقود، الفواتير، وطلبات الصيانة ضمن تجربة حياة يومية للمستأجر بدل الاكتفاء بعرض العقار فقط.
+              تابع عقدك ودفعاتك وطلبات الصيانة من مكان واحد، وابقَ على اطلاع بكل جديد يخص سكنك وخدماتك.
             </p>
           </div>
 
           <div className="w-full max-w-sm">
-            <label htmlFor="tenantId" className="field-label mb-1 block">اختيار المستأجر التجريبي</label>
+            <label htmlFor="tenantId" className="field-label mb-1 block">اختيار الحساب</label>
             <select
               id="tenantId"
               value={selectedTenantId}

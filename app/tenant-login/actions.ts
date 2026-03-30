@@ -19,28 +19,43 @@ function getFormValue(formData: FormData, key: string) {
   return String(formData.get(key) || '').trim()
 }
 
-function buildTenantLoginRedirect(error: string, portalEmail?: string, retryAfterSeconds?: number) {
-  const params = new URLSearchParams({ error })
+type RedirectOptions = {
+  portalEmail?: string
+  retryAfterSeconds?: number
+}
 
-  if (portalEmail) {
-    params.set('portalEmail', portalEmail)
+function appendRedirectParams(basePath: string, error: string, options: RedirectOptions = {}) {
+  const [pathname, queryString] = basePath.split('?', 2)
+  const params = new URLSearchParams(queryString || '')
+  params.set('error', error)
+
+  if (options.portalEmail) {
+    params.set('portalEmail', options.portalEmail)
   }
 
-  if (retryAfterSeconds && retryAfterSeconds > 0) {
-    params.set('retryAfter', String(retryAfterSeconds))
+  if (options.retryAfterSeconds && options.retryAfterSeconds > 0) {
+    params.set('retryAfter', String(options.retryAfterSeconds))
   }
 
-  return `/tenant-login?${params.toString()}`
+  return `${pathname}?${params.toString()}`
+}
+
+function buildTenantLoginRedirect(error: string, portalEmail?: string, retryAfterSeconds?: number, returnPath?: string) {
+  return appendRedirectParams(returnPath || '/auth?mode=signin&role=tenant', error, {
+    portalEmail,
+    retryAfterSeconds,
+  })
 }
 
 export async function tenantSignInAction(formData: FormData) {
   const portalEmail = getFormValue(formData, 'portalEmail').toLowerCase()
   const password = getFormValue(formData, 'password')
+  const returnPath = getFormValue(formData, 'returnPath') || undefined
   const requestHeaders = await headers()
   const clientIp = getClientIpFromHeaders(requestHeaders)
 
   if (!portalEmail || !password) {
-    redirect(buildTenantLoginRedirect('missing-fields', portalEmail))
+    redirect(buildTenantLoginRedirect('missing-fields', portalEmail, undefined, returnPath))
   }
 
   const rateLimitTarget = {
@@ -59,7 +74,7 @@ export async function tenantSignInAction(formData: FormData) {
       reason: 'Rate limit active before tenant login attempt',
       retryAfterSeconds: rateLimitStatus.retryAfterSeconds,
     })
-    redirect(buildTenantLoginRedirect('too-many-attempts', portalEmail, rateLimitStatus.retryAfterSeconds))
+    redirect(buildTenantLoginRedirect('too-many-attempts', portalEmail, rateLimitStatus.retryAfterSeconds, returnPath))
   }
 
   const tenant = await getTenantByPortalEmail(portalEmail)
@@ -79,7 +94,8 @@ export async function tenantSignInAction(formData: FormData) {
     redirect(buildTenantLoginRedirect(
       failureStatus.limited ? 'too-many-attempts' : 'invalid-credentials',
       portalEmail,
-      failureStatus.retryAfterSeconds
+      failureStatus.retryAfterSeconds,
+      returnPath
     ))
   }
 
@@ -100,7 +116,8 @@ export async function tenantSignInAction(formData: FormData) {
     redirect(buildTenantLoginRedirect(
       failureStatus.limited ? 'too-many-attempts' : 'invalid-credentials',
       portalEmail,
-      failureStatus.retryAfterSeconds
+      failureStatus.retryAfterSeconds,
+      returnPath
     ))
   }
 
@@ -125,7 +142,7 @@ export async function tenantSignInAction(formData: FormData) {
       clientIp,
       reason: 'Tenant session creation failed after valid credentials',
     })
-    redirect(buildTenantLoginRedirect('session-unavailable', portalEmail))
+    redirect(buildTenantLoginRedirect('session-unavailable', portalEmail, undefined, returnPath))
   }
 
   await recordAuthAuditEvent({

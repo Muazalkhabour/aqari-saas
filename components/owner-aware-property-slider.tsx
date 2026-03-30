@@ -32,10 +32,10 @@ export function OwnerAwarePropertySlider({ title, fallbackImages, preferredImage
   }, [fallbackImages, ownerPhotos, preferredImages])
 
   const helperText = preferredImages && preferredImages.length > 0
-    ? 'تُعرض هنا الصور المحفوظة مع هذا الإعلان المحلي المنشور'
+    ? 'تُعرض هنا صور الإعلان الجاهزة للعرض أمام الزوار'
     : ownerPhotos.length > 0
-      ? 'تُعرض هنا صور حقيقية مرفوعة محلياً من نفس المتصفح'
-      : 'لا توجد صور حقيقية مرفوعة في هذا المتصفح، لذلك تظهر صور العرض الافتراضية'
+      ? 'تُعرض هنا الصور التي أضفتها لتقوية حضور الإعلان'
+      : 'أضف صورك لرفع جاذبية الإعلان، وإلى ذلك الحين تظهر صور العرض التوضيحية'
 
   return (
     <div className="space-y-4">

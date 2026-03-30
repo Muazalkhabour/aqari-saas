@@ -15,9 +15,14 @@ type SearchFiltersProps = {
 export function SearchFilters({ current }: SearchFiltersProps) {
   return (
     <form className="grid gap-4 rounded-[32px] border border-white/60 bg-white/90 p-6 shadow-[0_20px_60px_rgba(16,42,67,0.08)] lg:grid-cols-6" action="/search">
+      <div className="lg:col-span-6">
+        <h2 className="section-title text-xl font-bold text-slate-950 sm:text-2xl">ابدأ بفلاتر قليلة</h2>
+        <p className="body-soft mt-2 text-sm text-[var(--muted)]">اختر ما يهمك أولاً، ثم أضف المزيد من التحديدات فقط عندما تريد الوصول إلى فرصة أدق.</p>
+      </div>
+
       <div className="lg:col-span-2">
         <label htmlFor="query" className="field-label mb-1 block">
-          كلمة مفتاحية
+          ما الذي تبحث عنه؟
         </label>
         <input
           id="query"
@@ -30,7 +35,7 @@ export function SearchFilters({ current }: SearchFiltersProps) {
 
       <div>
         <label htmlFor="type" className="field-label mb-1 block">
-          النوع
+          نوع العرض
         </label>
         <select
           id="type"
@@ -46,13 +51,13 @@ export function SearchFilters({ current }: SearchFiltersProps) {
 
       <div>
         <label htmlFor="governorate" className="field-label mb-1 block">
-          المحافظة
+          المكان
         </label>
         <select
           id="governorate"
           name="governorate"
           defaultValue={current.governorate ?? 'الكل'}
-          className="min-w-[11rem] w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-700 focus:ring-4 focus:ring-emerald-700/10 sm:text-base"
+          className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-700 focus:ring-4 focus:ring-emerald-700/10 sm:min-w-[11rem] sm:text-base"
         >
           <option value="الكل">كل المحافظات</option>
           {governorates.map((governorate) => (
@@ -65,7 +70,7 @@ export function SearchFilters({ current }: SearchFiltersProps) {
 
       <div>
         <label htmlFor="minPrice" className="field-label mb-1 block">
-          أقل سعر
+          من سعر
         </label>
         <input
           id="minPrice"
@@ -80,7 +85,7 @@ export function SearchFilters({ current }: SearchFiltersProps) {
 
       <div>
         <label htmlFor="maxPrice" className="field-label mb-1 block">
-          أعلى سعر
+          إلى سعر
         </label>
         <input
           id="maxPrice"
@@ -95,7 +100,7 @@ export function SearchFilters({ current }: SearchFiltersProps) {
 
       <div>
         <label htmlFor="minRooms" className="field-label mb-1 block">
-          أقل عدد غرف
+          الغرف
         </label>
         <select
           id="minRooms"
@@ -133,13 +138,13 @@ export function SearchFilters({ current }: SearchFiltersProps) {
           type="submit"
           className="btn-base btn-primary w-full"
         >
-          فلترة النتائج
+          اكتشف النتائج
         </button>
         <a
           href="/search"
           className="btn-base btn-secondary w-full"
         >
-          مسح الفلاتر
+          إعادة الضبط
         </a>
       </div>
     </form>

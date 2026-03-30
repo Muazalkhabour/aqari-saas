@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowLeft, CreditCard, LifeBuoy, LogOut, ShieldCheck } from 'lucide-react'
+import { CreditCard, LifeBuoy, LogOut, ShieldCheck } from 'lucide-react'
 import { createMaintenanceRequestAction, tenantLogoutAction } from '@/app/actions/rental-operations'
 import type { TenantPortalData } from '@/lib/rental-db'
 
@@ -48,6 +48,8 @@ type TenantPortalDashboardProps = {
 
 export function TenantPortalDashboard({ tenant }: TenantPortalDashboardProps) {
   const activeContract = tenant.contracts.find((contract) => contract.isActive) || tenant.contracts[0]
+  const overduePayments = tenant.payments.filter((payment) => payment.status === 'OVERDUE')
+  const upcomingPayments = tenant.payments.filter((payment) => payment.status !== 'PAID').slice(0, 3)
 
   return (
     <>
@@ -60,17 +62,21 @@ export function TenantPortalDashboard({ tenant }: TenantPortalDashboardProps) {
             </div>
             <h1 className="hero-title mt-4 max-w-[36rem] text-[1.55rem] font-bold text-slate-950 sm:text-[1.95rem] lg:text-[2.55rem]">
               <span className="hero-line">مرحباً {tenant.fullName}</span>
-              <span className="hero-line mt-2 sm:mt-3">العقد والدفعات والصيانة من حسابك مباشرة</span>
+              <span className="hero-line mt-2 sm:mt-3">هذه هي مساحة المستأجر للعقد والدفعات والصيانة</span>
             </h1>
             <p className="hero-subtitle mt-3 max-w-2xl">
-              بياناتك الآن تُقرأ من قاعدة البيانات، وليس من localStorage، مع جلسة دخول مستقلة لكل مستأجر.
+              بعد الدخول من البوابة الموحدة، تصل هنا مباشرة لما يخصك فقط: عقدك، دفعاتك، وطلبات الصيانة من حسابك الخاص.
             </p>
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <Link href="/dashboard" className="btn-base btn-secondary">
-              لوحة التشغيل
-              <ArrowLeft className="h-4 w-4" />
+            <Link href="#tenant-contract-summary" className="btn-base btn-secondary">
+              راجع العقد
+              <CreditCard className="h-4 w-4" />
+            </Link>
+            <Link href="#tenant-maintenance" className="btn-base btn-secondary">
+              افتح الصيانة
+              <LifeBuoy className="h-4 w-4" />
             </Link>
             <form action={tenantLogoutAction}>
               <button type="submit" className="btn-base btn-secondary">
@@ -80,13 +86,36 @@ export function TenantPortalDashboard({ tenant }: TenantPortalDashboardProps) {
             </form>
           </div>
         </div>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+          <article className="rounded-[28px] border border-white/60 bg-white/90 p-5 shadow-[0_16px_40px_rgba(16,42,67,0.06)]">
+            <div className="text-sm font-semibold text-slate-950">ابدأ من العقد</div>
+            <p className="mt-2 text-sm leading-7 text-slate-600">
+              {activeContract
+                ? 'راجع نهاية العقد والإيجار الشهري أولاً حتى تعرف إن كان لديك إجراء قريب.'
+                : 'لا يوجد عقد نشط ظاهر حالياً، لذلك ابدأ من الصيانة أو تواصل مع المكتب إذا كنت تتوقع ظهور عقد.'}
+            </p>
+          </article>
+          <article className="rounded-[28px] border border-white/60 bg-white/90 p-5 shadow-[0_16px_40px_rgba(16,42,67,0.06)]">
+            <div className="text-sm font-semibold text-slate-950">ثم راجع الدفعات</div>
+            <p className="mt-2 text-sm leading-7 text-slate-600">
+              {overduePayments.length > 0
+                ? `لديك ${overduePayments.length} دفعات متأخرة. ابدأ بها قبل مراجعة الدفعات القادمة.`
+                : 'إذا لم توجد دفعات متأخرة، اكتفِ بمراجعة الاستحقاقات القادمة فقط.'}
+            </p>
+          </article>
+          <article className="rounded-[28px] border border-white/60 bg-white/90 p-5 shadow-[0_16px_40px_rgba(16,42,67,0.06)]">
+            <div className="text-sm font-semibold text-slate-950">واستخدم الصيانة عند الحاجة</div>
+            <p className="mt-2 text-sm leading-7 text-slate-600">إذا كانت لديك مشكلة في الوحدة، أرسل الطلب من نفس الصفحة ولا تحتاج للبحث عن قناة أخرى.</p>
+          </article>
+        </div>
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
         <article id="tenant-contract-summary" className="rounded-[32px] border border-white/60 bg-white/90 p-6 shadow-[0_20px_60px_rgba(16,42,67,0.08)] scroll-mt-28">
           <div className="flex items-center gap-2 text-slate-950">
             <CreditCard className="h-5 w-5 text-emerald-700" />
-            <h2 className="section-title text-xl font-bold sm:text-2xl">العقد والفواتير</h2>
+            <h2 className="section-title text-xl font-bold sm:text-2xl">العقد والدفعات</h2>
           </div>
 
           {activeContract ? (
@@ -106,8 +135,11 @@ export function TenantPortalDashboard({ tenant }: TenantPortalDashboardProps) {
             </div>
           ) : null}
 
-          <div id="tenant-payments" className="mt-6 space-y-3 scroll-mt-28">
-            {tenant.payments.map((payment) => (
+          <div id="tenant-payments" className="mt-6 scroll-mt-28">
+            <div className="mb-4 text-sm text-[var(--muted)]">نعرض ما يحتاج انتباهك الآن أولاً، وليس كل الدفعات بالتساوي.</div>
+
+            <div className="space-y-3">
+            {(overduePayments.length > 0 ? [...overduePayments, ...tenant.payments.filter((payment) => payment.status !== 'OVERDUE')] : tenant.payments).map((payment) => (
               <div key={payment.id} className="rounded-3xl border border-slate-200 bg-slate-50/70 p-4">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div>
@@ -124,6 +156,20 @@ export function TenantPortalDashboard({ tenant }: TenantPortalDashboardProps) {
                 <div className="mt-3 text-sm text-[var(--muted)]">الاستحقاق: {arabicDate.format(new Date(payment.dueDate))}</div>
               </div>
             ))}
+            </div>
+
+            {upcomingPayments.length > 0 ? (
+              <div className="mt-5 rounded-[28px] border border-slate-200 bg-slate-50/70 p-5">
+                <div className="text-sm font-semibold text-slate-950">أقرب دفعات تحتاج مراجعة</div>
+                <div className="mt-3 space-y-2 text-sm text-slate-700">
+                  {upcomingPayments.map((payment) => (
+                    <div key={`upcoming-${payment.id}`} className="rounded-2xl bg-white px-4 py-3">
+                      {payment.notes || 'دفعة إيجار'} - {arabicDate.format(new Date(payment.dueDate))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </div>
         </article>
 
@@ -131,6 +177,10 @@ export function TenantPortalDashboard({ tenant }: TenantPortalDashboardProps) {
           <div className="flex items-center gap-2">
             <LifeBuoy className="h-5 w-5 text-emerald-300" />
             <h2 className="section-title text-xl font-bold sm:text-2xl">طلبات الصيانة</h2>
+          </div>
+
+          <div className="mt-3 text-sm leading-7 text-white/70">
+            إذا كانت المشكلة جديدة، استخدم النموذج مباشرة. وإذا كان لديك طلب سابق، ستجده أسفل النموذج في نفس المكان.
           </div>
 
           <form id="tenant-maintenance-form" action={createMaintenanceRequestAction} className="mt-6 space-y-4 rounded-3xl border border-white/10 bg-white/5 p-4 scroll-mt-28">

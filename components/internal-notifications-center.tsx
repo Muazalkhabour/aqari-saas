@@ -200,7 +200,7 @@ export function InternalNotificationsCenter({ notifications, activeTab, currentP
     startTransition(() => {
       void manageNotifications('reset-demo')
         .then(() => {
-          showToast('تمت إعادة توليد الإشعارات التجريبية.', 'success')
+          showToast('تم تحديث الإشعارات بنجاح.', 'success')
         })
         .catch(() => {
           showToast('تعذر إعادة توليد الإشعارات الآن.', 'error')
@@ -237,36 +237,60 @@ export function InternalNotificationsCenter({ notifications, activeTab, currentP
             <div className="max-w-3xl">
               <div className="eyebrow-text inline-flex items-center gap-2 rounded-full border border-emerald-800/10 bg-white/70 px-4 py-2 text-emerald-900">
                 <BellRing className="h-4 w-4" />
-                مركز الإشعارات الداخلية
+                إشعارات العقود
               </div>
               <h1 className="hero-title mt-4 max-w-[36rem] text-[1.55rem] font-bold text-slate-950 sm:text-[1.95rem] lg:text-[2.55rem]">
-                <span className="hero-line">الإشعارات التشغيلية الخاصة بالعقود</span>
-                <span className="hero-line mt-2 sm:mt-3">مع تعليم كمقروء وربط مباشر بالعقد</span>
+                <span className="hero-line">راجع ما يحتاج انتباهاً</span>
+                <span className="hero-line mt-2 sm:mt-3">ثم أغلقه كمقروء</span>
               </h1>
               <p className="hero-subtitle mt-3 max-w-2xl">
-                هذه الصفحة تعطي المكتب صندوق متابعة داخلياً مستقلاً عن البريد، بحيث يرى ما تم تجديده أو إنهاؤه ويغلق الإشعارات بعد المراجعة.
+                هنا تظهر تنبيهات العقود التي ما زالت تحتاج مراجعة داخل المكتب، من دون الرجوع إلى البريد أو البحث داخل البطاقات.
               </p>
             </div>
 
             <div className="flex flex-wrap gap-3">
               <Link href="/contracts" className="btn-base btn-secondary">العودة إلى العقود</Link>
               <button type="button" onClick={handleMarkAllRead} disabled={isPending || unreadCount === 0} className="btn-base btn-primary disabled:cursor-not-allowed disabled:opacity-60">
-                تعليم الكل كمقروء
+                تعليم الكل
                 <CheckCheck className="h-4 w-4" />
               </button>
               <button type="button" onClick={handleResetDemo} disabled={isPending} className="btn-base btn-secondary disabled:cursor-not-allowed disabled:opacity-60">
-                إعادة توليد تجريبي
+                إعادة التوليد
                 <RotateCcw className="h-4 w-4" />
               </button>
               <button type="button" onClick={handleClearAll} disabled={isPending || items.length === 0} className="btn-base btn-secondary disabled:cursor-not-allowed disabled:opacity-60">
-                مسح الإشعارات
+                مسح الكل
                 <Trash2 className="h-4 w-4" />
               </button>
               <div className="rounded-2xl bg-slate-950 px-5 py-3 text-sm text-white">
-                {isPending ? 'جار تحديث الإشعارات...' : `غير المقروء: ${unreadCount}`}
+                {isPending ? 'جار تحديث الإشعارات...' : `غير المقروء الآن: ${unreadCount}`}
               </div>
             </div>
           </div>
+        </section>
+
+        <section className="grid gap-4 md:grid-cols-3">
+          <article className="rounded-[28px] border border-white/60 bg-white/90 p-5 shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
+            <div className="flex items-center gap-2 text-slate-950">
+              <BellRing className="h-5 w-5 text-emerald-700" />
+              <div className="text-base font-bold">ابدأ بغير المقروء</div>
+            </div>
+            <p className="mt-3 text-sm leading-7 text-slate-600">ابدأ بغير المقروء لأنه يمثل ما لم يراجَع بعد.</p>
+          </article>
+          <article className="rounded-[28px] border border-white/60 bg-white/90 p-5 shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
+            <div className="flex items-center gap-2 text-slate-950">
+              <CheckCheck className="h-5 w-5 text-emerald-700" />
+              <div className="text-base font-bold">أغلق ما راجعته</div>
+            </div>
+            <p className="mt-3 text-sm leading-7 text-slate-600">بعد فتح العقد أو التحقق من الحدث، علّم الإشعار كمقروء حتى يبقى المركز نظيفاً.</p>
+          </article>
+          <article className="rounded-[28px] border border-white/60 bg-white/90 p-5 shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
+            <div className="flex items-center gap-2 text-slate-950">
+              <RotateCcw className="h-5 w-5 text-emerald-700" />
+              <div className="text-base font-bold">استخدم إعادة التوليد بحذر</div>
+            </div>
+            <p className="mt-3 text-sm leading-7 text-slate-600">إعادة التوليد أو المسح للتجربة فقط. في العمل اليومي احتفظ بالسجل حتى تنتهي المراجعة.</p>
+          </article>
         </section>
 
         <section className="rounded-[28px] border border-white/60 bg-white/92 p-5 shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
@@ -286,8 +310,8 @@ export function InternalNotificationsCenter({ notifications, activeTab, currentP
         <section className="space-y-4">
           {filteredNotifications.length === 0 ? (
             <article className="rounded-[32px] border border-dashed border-slate-300 bg-white/88 p-8 text-center shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
-              <h2 className="text-xl font-bold text-slate-950">لا توجد إشعارات داخلية حالياً</h2>
-              <p className="mt-3 text-sm text-slate-600">ستظهر هنا إشعارات التجديد والإنهاء القادمة من إدارة العقود.</p>
+              <h2 className="text-xl font-bold text-slate-950">لا توجد إشعارات حالياً</h2>
+              <p className="mt-3 text-sm text-slate-600">ستظهر هنا إشعارات التجديد والإنهاء القادمة من العقود.</p>
             </article>
           ) : (
             pageItems.map((item) => {

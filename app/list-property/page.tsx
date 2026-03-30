@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowLeft, Camera, CheckCircle2, ClipboardList, Eye, Info, PlusCircle, Sparkles } from 'lucide-react'
+import { Camera, CheckCircle2, ClipboardList, Eye, Info, PlusCircle, Sparkles } from 'lucide-react'
 import {
   governorates,
   ownerFeatureSuggestions,
@@ -19,24 +19,27 @@ export default function ListPropertyPage() {
             <div className="space-y-5">
               <div className="eyebrow-text inline-flex items-center gap-2 rounded-full border border-emerald-800/10 bg-white/75 px-4 py-2 text-emerald-900">
                 <PlusCircle className="h-4 w-4" />
-                مساحة مخصصة لصاحب العقار
+                مسار مبسط لصاحب العقار
               </div>
 
               <div>
                 <h1 className="hero-title max-w-[34rem] text-[1.55rem] font-bold text-slate-950 sm:text-[1.95rem] lg:text-[2.55rem]">
-                  <span className="hero-line">اعرض <span className="hero-highlight">عقارك</span> بصياغة أوضح</span>
-                  <span className="hero-line mt-2 sm:mt-3">تزيد الثقة وجودة التواصل</span>
+                  <span className="hero-line">جهّز <span className="hero-highlight">إعلان العقار</span> على 3 خطوات فقط</span>
+                  <span className="hero-line mt-2 sm:mt-3">بيانات ثم صور ثم معاينة</span>
                 </h1>
                 <p className="hero-subtitle mt-4 max-w-xl">
-                  هذه الصفحة تبني إعلاناً منظماً يركز على ما يهم المشتري أو المستأجر فعلاً: الحي، السعر، الجاهزية، ونقاط القوة الحقيقية.
+                  ابدأ بالبيانات الأساسية هنا، ثم ارفع الصور، ثم راجع المعاينة. لا تحتاج أكثر من هذا المسار.
                 </p>
               </div>
 
-              <div className="grid gap-3">
-                {ownerPublishingAdvantages.map((item) => (
-                  <div key={item.title} className="rounded-3xl border border-slate-900/6 bg-white/75 p-5">
-                    <h2 className="card-title text-lg font-bold text-slate-950">{item.title}</h2>
-                    <p className="body-soft mt-2 text-sm text-[var(--muted)]">{item.description}</p>
+              <div className="grid gap-3 md:grid-cols-3">
+                {[
+                  '1. أدخل الأساسيات: العنوان، الموقع، السعر.',
+                  '2. أضف المواصفات المختصرة فقط: المساحة، الغرف، الحالة.',
+                  '3. انتقل إلى المعاينة ثم أكمل الصور قبل النشر.',
+                ].map((item) => (
+                  <div key={item} className="rounded-3xl border border-slate-900/6 bg-white/75 p-5 text-sm leading-7 text-slate-700">
+                    {item}
                   </div>
                 ))}
               </div>
@@ -45,7 +48,7 @@ export default function ListPropertyPage() {
             <div className="rounded-[32px] border border-slate-900/8 bg-slate-950 p-6 text-white shadow-[0_20px_60px_rgba(15,23,42,0.22)]">
               <div className="flex items-center gap-2 text-white">
                 <ClipboardList className="h-5 w-5 text-emerald-300" />
-                <h2 className="section-title text-xl font-bold sm:text-2xl">ما الذي يجعل إعلانك أقوى؟</h2>
+                <h2 className="section-title text-xl font-bold sm:text-2xl">ما الذي تحتاجه فعلاً هنا؟</h2>
               </div>
 
               <div className="mt-5 space-y-3">
@@ -58,7 +61,7 @@ export default function ListPropertyPage() {
               </div>
 
               <div className="mt-5 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm leading-7 text-white/75">
-                الإعلان القوي لا يحتاج كلاماً كثيراً، بل معلومات دقيقة تقلل الأسئلة وتزيد فرص المعاينة.
+                لا تكتب كل شيء. إذا وضحت الموقع والسعر والحالة وأبرز ميزة، فقد أنجزت المهم.
               </div>
             </div>
           </div>
@@ -70,16 +73,21 @@ export default function ListPropertyPage() {
               <div>
                 <h2 className="section-title text-xl font-bold text-slate-950 sm:text-2xl">أدخل بيانات العقار</h2>
                 <p className="body-soft mt-2 text-sm text-[var(--muted)]">
-                  بعد الضغط على المعاينة، ستتحول هذه البيانات إلى بطاقة عرض قريبة من الشكل النهائي داخل المنصة.
+                  املأ الحقول المهمة فقط. بقية التحسينات ستظهر في مرحلة الصور والمعاينة.
                 </p>
               </div>
               <div className="inline-flex items-center gap-2 rounded-full bg-emerald-700/10 px-4 py-2 text-sm font-semibold text-emerald-900">
                 <Eye className="h-4 w-4" />
-                معاينة مباشرة قبل النشر
+                الخطوة 1 من 3
               </div>
             </div>
 
             <form action="/list-property/preview" className="mt-6 grid gap-4 sm:grid-cols-2">
+              <div className="sm:col-span-2 rounded-[28px] border border-slate-200 bg-slate-50/80 p-5">
+                <div className="text-base font-bold text-slate-950">الأساسيات</div>
+                <p className="mt-2 text-sm text-slate-600">هذه الحقول تحدد إن كان الزائر سيكمل القراءة أم لا.</p>
+              </div>
+
               <input
                 name="title"
                 defaultValue="شقة واسعة للبيع في حي هادئ"
@@ -149,6 +157,11 @@ export default function ListPropertyPage() {
                 <option value="سنوي">إيجار سنوي</option>
               </select>
 
+              <div className="sm:col-span-2 rounded-[28px] border border-slate-200 bg-slate-50/80 p-5">
+                <div className="text-base font-bold text-slate-950">المواصفات المختصرة</div>
+                <p className="mt-2 text-sm text-slate-600">أدخل فقط ما يساعد على المقارنة السريعة.</p>
+              </div>
+
               <input
                 name="areaSqm"
                 defaultValue="145"
@@ -189,6 +202,11 @@ export default function ListPropertyPage() {
                 <option value="نصف مفروش">نصف مفروش</option>
                 <option value="مفروش">مفروش</option>
               </select>
+
+              <div className="sm:col-span-2 rounded-[28px] border border-slate-200 bg-slate-50/80 p-5">
+                <div className="text-base font-bold text-slate-950">نقطة القوة والتواصل</div>
+                <p className="mt-2 text-sm text-slate-600">اختم الرسالة بأوضح ميزة، ثم أضف وسائل التواصل الأساسية.</p>
+              </div>
 
               <input
                 name="status"
@@ -265,17 +283,10 @@ export default function ListPropertyPage() {
                   <Camera className="h-4 w-4" />
                 </Link>
                 <Link
-                  href="/search"
-                  className="btn-base btn-secondary"
-                >
-                  شاهد العقارات الحالية
-                  <ArrowLeft className="h-4 w-4" />
-                </Link>
-                <Link
                   href="/my-properties"
                   className="btn-base btn-secondary"
                 >
-                  عقاراتي المحلية
+                  عقاراتي
                   <Eye className="h-4 w-4" />
                 </Link>
               </div>
@@ -286,7 +297,7 @@ export default function ListPropertyPage() {
             <article className="rounded-[32px] border border-white/60 bg-white/90 p-6 shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
               <div className="flex items-center gap-2 text-slate-950">
                 <Sparkles className="h-5 w-5 text-amber-600" />
-                <h2 className="section-title text-xl font-bold sm:text-2xl">اقتراحات جاهزة لك</h2>
+                <h2 className="section-title text-xl font-bold sm:text-2xl">اقتراحات جاهزة للاختصار</h2>
               </div>
               <div className="mt-5 flex flex-wrap gap-2">
                 {ownerFeatureSuggestions.map((feature) => (
@@ -296,20 +307,23 @@ export default function ListPropertyPage() {
                 ))}
               </div>
               <p className="body-soft mt-4 text-sm text-[var(--muted)]">
-                اذكر 4 إلى 6 مزايا فقط. كثرة التفاصيل تضعف الرسالة الأساسية.
+                اذكر 4 إلى 6 مزايا فقط. لا تحوّل الإعلان إلى قائمة طويلة.
               </p>
             </article>
 
             <article className="rounded-[32px] border border-slate-900/8 bg-slate-950 p-6 text-white shadow-[0_20px_60px_rgba(15,23,42,0.22)]">
               <div className="flex items-center gap-2">
                 <Info className="h-5 w-5 text-emerald-300" />
-                <h2 className="section-title text-xl font-bold sm:text-2xl">كيف ترفع فرصة التواصل؟</h2>
+                <h2 className="section-title text-xl font-bold sm:text-2xl">بعد هذه الصفحة</h2>
               </div>
               <div className="mt-5 space-y-3 text-sm leading-7 text-white/80">
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">اختر عنواناً يوضح الموقع والقيمة، مثل: شقة للبيع في كفرسوسة مع كراج.</div>
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">في الإيجار، اذكر بوضوح ما إذا كان العقد شهرياً أو سنوياً.</div>
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">الوصف الجيد يجيب بسرعة: لمن يناسب العقار، وما الذي يميزه، وما أهم تفاصيله.</div>
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">بعد تعبئة البيانات، ارفع صوراً حقيقية للصالون وغرفة النوم والمطبخ والشرفة بدل الاكتفاء بالصور التخيلية.</div>
+                {ownerPublishingAdvantages.slice(0, 3).map((item) => (
+                  <div key={item.title} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <div className="font-semibold text-white">{item.title}</div>
+                    <div className="mt-2 text-white/70">{item.description}</div>
+                  </div>
+                ))}
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">الانتقال الطبيعي بعد تعبئة البيانات هو رفع الصور ثم مراجعة المعاينة، وليس القفز بين صفحات كثيرة.</div>
               </div>
             </article>
           </aside>

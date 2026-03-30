@@ -18,7 +18,7 @@ export function PropertyCard({ property, compact = false }: PropertyCardProps) {
         </Link>
 
         <div className="flex flex-wrap items-start justify-between gap-3">
-          <div className="space-y-2">
+          <div className="min-w-0 space-y-2">
             <div className="flex flex-wrap gap-2">
               <span className={`inline-flex rounded-full px-3 py-1 text-xs font-bold text-white ${property.type === 'بيع' ? 'bg-orange-500' : 'bg-emerald-700'}`}>
                 {property.type}
@@ -27,20 +27,20 @@ export function PropertyCard({ property, compact = false }: PropertyCardProps) {
                 {property.ownership}
               </span>
             </div>
-            <h3 className="card-title text-2xl font-bold text-slate-950">
+            <h3 className="card-title text-xl font-bold text-slate-950 sm:text-2xl">
               <Link href={`/properties/${property.id}`} className="transition hover:text-emerald-800">
                 {property.title}
               </Link>
             </h3>
-            <div className="flex items-center gap-2 text-sm text-[var(--muted)]">
+            <div className="flex items-start gap-2 text-sm text-[var(--muted)]">
               <MapPin className="h-4 w-4 text-emerald-800" />
-              <span>
+              <span className="min-w-0 break-words">
                 {property.governorate} - {property.district} - {property.neighborhood}
               </span>
             </div>
           </div>
 
-          <div className="rounded-2xl bg-slate-950 px-4 py-3 text-right text-white">
+          <div className="w-full rounded-2xl bg-slate-950 px-4 py-3 text-right text-white sm:w-auto">
             <div className="stat-label !text-white/60">السعر</div>
             <div className="mt-1 text-sm font-bold">{property.priceLabel}</div>
           </div>
@@ -77,12 +77,12 @@ export function PropertyCard({ property, compact = false }: PropertyCardProps) {
           </div>
         </div>
 
-        {!compact ? <p className="body-soft text-sm text-[var(--muted)]">{property.description}</p> : null}
+        {!compact ? <p className="body-soft line-clamp-3 text-sm text-[var(--muted)]">{property.description}</p> : null}
 
         <div className="rounded-2xl border border-dashed border-slate-200 bg-[var(--surface-strong)] p-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-slate-950">
             <Sparkles className="h-4 w-4 text-amber-600" />
-            لماذا قد يهم المستخدم؟
+            لماذا قد يناسبك؟
           </div>
           <p className="body-soft mt-2 text-sm text-[var(--muted)]">{property.highlight}</p>
         </div>
@@ -103,15 +103,9 @@ export function PropertyCard({ property, compact = false }: PropertyCardProps) {
           <div className="flex flex-wrap gap-2">
             <Link
               href={`/properties/${property.id}`}
-              className="btn-base btn-secondary btn-sm"
-            >
-              التفاصيل والصور
-            </Link>
-            <Link
-              href={`/search?query=${encodeURIComponent(property.neighborhood)}&type=${encodeURIComponent(property.type)}`}
               className="btn-base btn-primary btn-sm"
             >
-              عقارات مشابهة
+              عرض التفاصيل
             </Link>
           </div>
         </div>

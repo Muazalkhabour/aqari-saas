@@ -35,14 +35,14 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl">
               <div className="eyebrow-text inline-flex rounded-full border border-emerald-800/10 bg-white/70 px-4 py-2 text-emerald-900">
-                بحث وفلترة عقارية لسوريا
+                البحث العقاري
               </div>
               <h1 className="hero-title mt-4 max-w-[34rem] text-[1.55rem] font-bold text-slate-950 sm:text-[1.95rem] lg:text-[2.55rem]">
-                <span className="hero-line">ابحث عن <span className="hero-highlight">عقارات</span> للبيع أو الإيجار</span>
-                <span className="hero-line mt-2 sm:mt-3">حسب <span className="hero-highlight">المحافظة</span> والميزانية</span>
+                <span className="hero-line">ابحث عن العرض الأقرب لاحتياجك</span>
+                <span className="hero-line mt-2 sm:mt-3">وتابع الفرص المناسبة لك بسهولة</span>
               </h1>
               <p className="hero-subtitle mt-3 max-w-xl">
-                نتائج البحث هنا تشمل العقارات التجريبية الموجودة في المنصة، إضافة إلى العقارات التي يقوم المالك بنشرها محلياً من نفس المتصفح.
+                ابدأ بالمكان أو النوع، ثم صفِّ النتائج حتى تصل إلى العقار الذي يستحق متابعتك أو تواصلك مباشرة.
               </p>
             </div>
             <Link href="/" className="btn-base btn-secondary">

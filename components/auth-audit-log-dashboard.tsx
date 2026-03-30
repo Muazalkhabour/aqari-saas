@@ -75,7 +75,7 @@ export function AuthAuditLogDashboard({ events, filters, storageKind, totalCount
               <span className="hero-line mt-2 sm:mt-3">من شاشة تشغيل داخلية واحدة</span>
             </h1>
             <p className="hero-subtitle mt-3 max-w-2xl">
-              استخدم هذه الصفحة لمراجعة النشاط الأخير، فرز النتائج حسب نوع الدخول أو النتيجة، ومعرفة ما إذا كان التخزين الحالي للـ rate limit يعمل على الملف المحلي أو على Redis.
+              استخدم هذه الصفحة لمراجعة النشاط الأخير، فرز النتائج حسب نوع الدخول أو النتيجة، ومتابعة مستوى الحماية واستقرار محاولات الدخول.
             </p>
           </div>
 
@@ -84,11 +84,11 @@ export function AuthAuditLogDashboard({ events, filters, storageKind, totalCount
               العودة إلى اللوحة
               <ArrowLeft className="h-4 w-4" />
             </Link>
-            <Link href="/login" className="btn-base btn-secondary">
+            <Link href="/auth?mode=signin&role=manager" className="btn-base btn-secondary">
               اختبار دخول المكتب
               <ShieldCheck className="h-4 w-4" />
             </Link>
-            <Link href="/tenant-login" className="btn-base btn-secondary">
+            <Link href="/auth?mode=signin&role=tenant" className="btn-base btn-secondary">
               اختبار دخول المستأجر
               <ShieldCheck className="h-4 w-4" />
             </Link>

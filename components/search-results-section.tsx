@@ -66,17 +66,30 @@ export function SearchResultsSection({ staticProperties, filters }: SearchResult
   return (
     <>
       <section className="rounded-[32px] border border-white/60 bg-white/90 p-5 shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
-        <p className="body-soft text-sm text-[var(--muted)]">
-          عدد النتائج الحالية: <span className="font-bold text-slate-950">{properties.length}</span> نتيجة، وتشمل العقارات التجريبية إضافة إلى ما تم نشره محلياً من هذا المتصفح.
-        </p>
+        <div className="grid gap-4 md:grid-cols-3">
+          <div>
+            <div className="text-sm font-semibold text-slate-950">عدد النتائج</div>
+            <p className="body-soft mt-2 text-sm text-[var(--muted)]">
+              لديك الآن <span className="font-bold text-slate-950">{properties.length}</span> فرصة يمكن مقارنتها واختيار الأنسب منها.
+            </p>
+          </div>
+          <div>
+            <div className="text-sm font-semibold text-slate-950">إذا كانت كثيرة</div>
+            <p className="body-soft mt-2 text-sm text-[var(--muted)]">أضف السعر أو الغرف أو الفرش لتضييقها.</p>
+          </div>
+          <div>
+            <div className="text-sm font-semibold text-slate-950">إذا كانت قليلة</div>
+            <p className="body-soft mt-2 text-sm text-[var(--muted)]">أزل بعض الفلاتر أو جرّب محافظة أو كلمة أوسع.</p>
+          </div>
+        </div>
       </section>
 
       {properties.length > 0 ? <SearchResultsMap properties={properties} /> : null}
 
       {searchGalleryImages.length > 0 ? (
         <PropertyGallery
-          title="معرض بصري من النتائج الحالية"
-          description="يعرض الصور التجريبية والصور الحقيقية المحلية للعقارات المنشورة من هذا المتصفح داخل نفس نتائج البحث."
+          title="لمحة سريعة من النتائج"
+            description="لقطات سريعة تساعدك على مقارنة العروض بصرياً قبل فتح التفاصيل الكاملة أو طلب التواصل."
           images={searchGalleryImages}
         />
       ) : null}
@@ -88,7 +101,7 @@ export function SearchResultsSection({ staticProperties, filters }: SearchResult
           <div className="xl:col-span-2 rounded-[32px] border border-dashed border-slate-300 bg-white/80 p-10 text-center shadow-[0_20px_60px_rgba(16,42,67,0.06)]">
             <h2 className="section-title text-xl font-bold text-slate-950 sm:text-2xl">لا توجد نتائج مطابقة حالياً</h2>
             <p className="body-soft mt-3 text-sm text-[var(--muted)]">
-              جرّب توسيع السعر أو تغيير المحافظة أو حذف بعض الفلاتر لعرض نتائج أكثر.
+              جرّب توسيع نطاق البحث أو إزالة بعض الفلاتر، فقد تكون الفرصة المناسبة بانتظار تعديل صغير فقط.
             </p>
           </div>
         )}

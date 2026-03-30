@@ -24,7 +24,7 @@ export function LocalContactRequestForm({ listingId, listingTitle }: LocalContac
         message: String(formData.get('message') || `أرغب بمعرفة مزيد من التفاصيل حول ${listingTitle}`),
       })
 
-      setSentMessage('تم حفظ طلب التواصل محلياً. سيظهر الآن داخل لوحة المالك في نفس المتصفح.')
+      setSentMessage('تم إرسال طلبك بنجاح. سيتواصل معك فريق الإعلان في أقرب وقت ممكن.')
     })
   }
 
@@ -36,7 +36,7 @@ export function LocalContactRequestForm({ listingId, listingTitle }: LocalContac
       </div>
 
       <p className="body-soft mt-3 text-sm text-[var(--muted)]">
-        النموذج يحاكي استقبال الاستفسارات الآن بدون خادم. كل طلب جديد يُحفظ محلياً ويظهر لصاحب الإعلان داخل لوحة المتابعة.
+        اترك بياناتك الآن لتصلك المتابعة سريعاً وتحصل على آخر التفاصيل والعروض المتاحة.
       </p>
 
       <form action={handleSubmit} className="mt-5 grid gap-3">
@@ -66,7 +66,7 @@ export function LocalContactRequestForm({ listingId, listingTitle }: LocalContac
           className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-emerald-700 focus:ring-4 focus:ring-emerald-700/10"
         />
         <button type="submit" disabled={isPending} className="btn-base btn-primary w-full">
-          {isPending ? 'جارٍ إرسال الطلب...' : 'إرسال طلب التواصل'}
+          {isPending ? 'جارٍ إرسال الطلب...' : 'إرسال الطلب'}
           <Send className="h-4 w-4" />
         </button>
       </form>

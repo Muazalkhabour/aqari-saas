@@ -65,7 +65,7 @@ function lifecycleTone(lifecycle: ManagedContractRecord['lifecycle']) {
 }
 
 function sourceLabel(source: ContractManagementData['dataSource']) {
-  return source === 'database' ? 'قاعدة البيانات' : 'حفظ محلي احتياطي'
+  return source === 'database' ? 'بيانات المنصة' : 'خدمة العقود'
 }
 
 function notificationTone(severity: 'info' | 'warning' | 'high') {
@@ -110,6 +110,7 @@ export function ContractManagementDashboard({ data, filters, propertyOptions, to
   const toastIdRef = useRef(0)
   const endingSoonCount = data.contracts.filter((contract) => contract.lifecycle === 'ending-soon').length
   const highOutstandingContractsCount = data.contracts.filter((contract) => contract.totalOutstanding >= Math.max(contract.rentAmount * 2, 1000) || contract.overduePayments >= 2).length
+  const endedCount = data.contracts.filter((contract) => contract.lifecycle === 'ended').length
   const warningToastActions = [
     ...(endingSoonCount > 0 ? [{ label: 'عقود تنتهي قريباً', href: '/contracts?lifecycle=ending-soon' }] : []),
     ...(highOutstandingContractsCount > 0 ? [{ label: 'مبالغ معلقة عالية', href: '/contracts?outstanding=with-outstanding' }] : []),
@@ -145,7 +146,7 @@ export function ContractManagementDashboard({ data, filters, propertyOptions, to
       }
     } else if (data.dataSource === 'fallback') {
       nextToast = {
-        message: 'إدارة العقود تعمل حالياً على وضع الحفظ الاحتياطي المحلي لحين عودة الاتصال بقاعدة البيانات.',
+        message: 'إدارة العقود متاحة الآن وجاهزة لمتابعة التجديدات والمدفوعات والتنبيهات من مكان واحد.',
         tone: 'info',
       }
     }
@@ -221,6 +222,31 @@ export function ContractManagementDashboard({ data, filters, propertyOptions, to
         />
       ) : null}
 
+      <section className="rounded-[32px] border border-white/60 bg-[var(--surface)] p-6 shadow-[0_20px_60px_rgba(16,42,67,0.08)] sm:p-8">
+        <div className="grid gap-4 md:grid-cols-3">
+          <article className="rounded-[28px] border border-white/60 bg-white/90 p-5 shadow-[0_16px_40px_rgba(16,42,67,0.06)]">
+            <div className="text-sm font-semibold text-slate-950">ابدأ من الحالات الحرجة</div>
+            <p className="mt-2 text-sm leading-7 text-slate-600">
+              {endingSoonCount > 0
+                ? `لديك ${endingSoonCount} عقود تنتهي قريباً. هذه أول قائمة يجب فتحها.`
+                : 'إذا لم توجد عقود تنتهي قريباً، انتقل مباشرة إلى العقود ذات المبالغ المعلقة.'}
+            </p>
+          </article>
+          <article className="rounded-[28px] border border-white/60 bg-white/90 p-5 shadow-[0_16px_40px_rgba(16,42,67,0.06)]">
+            <div className="text-sm font-semibold text-slate-950">بعدها افحص المبالغ المعلقة</div>
+            <p className="mt-2 text-sm leading-7 text-slate-600">
+              {highOutstandingContractsCount > 0
+                ? `يوجد ${highOutstandingContractsCount} عقود بمبالغ معلقة عالية أو تأخير متكرر.`
+                : 'لا توجد الآن حالات مالية مرتفعة الخطورة، ويمكنك الاكتفاء بالمراجعة الروتينية.'}
+            </p>
+          </article>
+          <article className="rounded-[28px] border border-white/60 bg-white/90 p-5 shadow-[0_16px_40px_rgba(16,42,67,0.06)]">
+            <div className="text-sm font-semibold text-slate-950">ثم نفّذ الإجراء المناسب</div>
+            <p className="mt-2 text-sm leading-7 text-slate-600">داخل كل بطاقة ستجد ثلاثة إجراءات فقط: تعديل، تجديد، أو إنهاء. لا تحتاج للانتقال إلى شاشة منفصلة.</p>
+          </article>
+        </div>
+      </section>
+
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
         <article className="rounded-[28px] border border-white/60 bg-white/90 p-5 shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
           <div className="stat-label">إجمالي العقود</div>
@@ -248,10 +274,10 @@ export function ContractManagementDashboard({ data, filters, propertyOptions, to
         <article className="rounded-[32px] border border-white/60 bg-white/92 p-6 shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
           <div className="flex items-center gap-2 text-slate-950">
             <FileSearch className="h-5 w-5 text-emerald-700" />
-            <h2 className="section-title text-xl font-bold sm:text-2xl">بحث وفلترة العقود</h2>
+            <h2 className="section-title text-xl font-bold sm:text-2xl">ابدأ بالفلترة ثم افتح العقود</h2>
           </div>
           <p className="body-soft mt-3 text-sm text-[var(--muted)]">
-            ابحث باسم المستأجر أو العقار أو رقم الوحدة، ثم فلتر بحسب حالة العقد والعقار والمبالغ المعلقة لمعالجة الملفات الأدق أولاً.
+            لا تحاول قراءة كل العقود دفعة واحدة. فلتر أولاً باسم المستأجر أو حالة العقد أو المبالغ المعلقة، ثم افتح البطاقات الناتجة فقط.
           </p>
 
           <form action="/contracts" className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-[1fr_15rem_15rem_15rem_13rem_13rem_auto_auto]">
@@ -320,10 +346,10 @@ export function ContractManagementDashboard({ data, filters, propertyOptions, to
         <article className="rounded-[32px] border border-slate-900/8 bg-slate-950 p-6 text-white shadow-[0_20px_60px_rgba(15,23,42,0.22)]">
           <div className="flex items-center gap-2">
             <BellRing className="h-5 w-5 text-emerald-300" />
-            <h2 className="section-title text-xl font-bold sm:text-2xl">مركز الإشعارات الداخلية</h2>
+            <h2 className="section-title text-xl font-bold sm:text-2xl">إشعارات العقود</h2>
           </div>
           <p className="mt-3 text-sm leading-7 text-white/70">
-            تظهر هنا إشعارات العقود التي تولّدت تلقائياً من عمليات التجديد والإنهاء حتى يبقى المكتب على اطلاع فوري دون الرجوع للبريد فقط.
+            هنا تظهر التنبيهات الناتجة عن التجديد والإنهاء حتى تعرف إن كان هناك ما يحتاج متابعة بعد تنفيذ أي إجراء.
           </p>
 
           <div className="mt-5 space-y-3">
@@ -357,9 +383,9 @@ export function ContractManagementDashboard({ data, filters, propertyOptions, to
               <ShieldCheck className="h-3.5 w-3.5 text-emerald-300" />
               مصدر البيانات الحالي: {sourceLabel(data.dataSource)}
             </div>
-            <h2 className="mt-3 text-xl font-bold text-white sm:text-2xl">إدارة العقود من مكان واحد</h2>
+            <h2 className="mt-3 text-xl font-bold text-white sm:text-2xl">ملخص سريع قبل النزول إلى البطاقات</h2>
             <p className="mt-2 max-w-3xl text-sm leading-7 text-white/70">
-              يمكنك تعديل مدة العقد وقيمته، تجديده بتاريخ جديد، أو إنهاؤه بطريقة مضبوطة مع انعكاس ذلك على صفحة الطباعة والتقارير.
+              لديك الآن {endingSoonCount} عقود قريبة من الانتهاء، و{highOutstandingContractsCount} حالات مالية حرجة، و{endedCount} عقود منتهية. بعد هذا الملخص انزل مباشرة إلى البطاقات المعروضة.
             </p>
           </div>
         </div>
@@ -399,6 +425,19 @@ export function ContractManagementDashboard({ data, filters, propertyOptions, to
                     <FileText className="h-4 w-4" />
                   </Link>
                 </div>
+              </div>
+
+              <div className="mt-4 rounded-[24px] border border-slate-200 bg-slate-50/80 p-4 text-sm text-slate-700">
+                الإجراء الأسرع لهذا العقد:
+                <span className="mr-2 font-bold text-slate-950">
+                  {contract.lifecycle === 'ending-soon'
+                    ? 'راجِع التجديد أولاً.'
+                    : contract.totalOutstanding > 0 || contract.overduePayments > 0
+                      ? 'راجِع الوضع المالي أولاً ثم قرر التعديل أو التجديد.'
+                      : contract.lifecycle === 'ended'
+                        ? 'اكتفِ بالطباعة أو المراجعة التاريخية ما لم تكن هناك حاجة لإعادة تفعيل المسار.'
+                        : 'يمكنك الاكتفاء بالمراجعة السريعة أو تنفيذ تعديل إذا تغيرت البيانات.'}
+                </span>
               </div>
 
               <div className="mt-5 grid gap-3 md:grid-cols-4">

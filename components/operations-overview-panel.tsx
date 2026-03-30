@@ -147,7 +147,7 @@ export async function OperationsOverviewPanel() {
             </div>
 
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              <Link href="/tenant-login" className="rounded-[22px] border border-slate-200 bg-white p-4 shadow-[0_10px_24px_rgba(15,23,42,0.05)] transition hover:bg-slate-50">
+              <Link href="/auth?mode=signin&role=tenant" className="rounded-[22px] border border-slate-200 bg-white p-4 shadow-[0_10px_24px_rgba(15,23,42,0.05)] transition hover:bg-slate-50">
                 <div className="flex items-center justify-between gap-3 text-slate-950">
                   <CreditCard className="h-5 w-5 text-emerald-800" />
                   <span className="text-sm font-bold">دخول المستأجر</span>

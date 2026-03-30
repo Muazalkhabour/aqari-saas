@@ -81,14 +81,14 @@ export default async function MaintenancePage({ searchParams }: MaintenancePageP
             <div className="max-w-3xl">
               <div className="eyebrow-text inline-flex items-center gap-2 rounded-full border border-emerald-800/10 bg-white/70 px-4 py-2 text-emerald-900">
                 <LifeBuoy className="h-4 w-4" />
-                لوحة صيانة للمكتب أو المالك
+                إدارة الصيانة
               </div>
               <h1 className="hero-title mt-4 max-w-[36rem] text-[1.55rem] font-bold text-slate-950 sm:text-[1.95rem] lg:text-[2.55rem]">
-                <span className="hero-line">طلبات الصيانة، المتابعة، والإشعارات</span>
-                <span className="hero-line mt-2 sm:mt-3">من نفس لوحة التشغيل</span>
+                <span className="hero-line">ابدأ بالطلبات الجديدة</span>
+                <span className="hero-line mt-2 sm:mt-3">ثم راجع الدفعات والإشعارات</span>
               </h1>
               <p className="hero-subtitle mt-3 max-w-2xl">
-                صفحة تشغيل مخصصة للمكتب العقاري أو المالك لمتابعة الأعطال، تحديث الحالات، وتأكيد الدفعات.
+                هذه الصفحة تجمع ما يحتاج متابعة في الصيانة: الطلبات أولاً، ثم الدفعات، ثم سجل الإشعارات.
               </p>
             </div>
 
@@ -100,11 +100,35 @@ export default async function MaintenancePage({ searchParams }: MaintenancePageP
               <div className="rounded-2xl bg-slate-950 px-5 py-3 text-sm text-white">
                 <div className="flex items-center gap-2">
                   <Mail className="h-4 w-4" />
-                  جاهزة للإرسال البريدي عند تفعيل SMTP
+                  جاهزة للإشعارات عند تفعيل SMTP
                 </div>
               </div>
             </div>
           </div>
+        </section>
+
+        <section className="grid gap-4 md:grid-cols-3">
+          <article className="rounded-[28px] border border-white/60 bg-white/90 p-5 shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
+            <div className="flex items-center gap-2 text-slate-950">
+              <LifeBuoy className="h-5 w-5 text-emerald-700" />
+              <div className="text-base font-bold">ابدأ بالطلبات الجديدة</div>
+            </div>
+            <p className="mt-3 text-sm leading-7 text-slate-600">ابدأ بالجديد أو العاجل، ثم انتقل إلى المجدول وقيد التنفيذ.</p>
+          </article>
+          <article className="rounded-[28px] border border-white/60 bg-white/90 p-5 shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
+            <div className="flex items-center gap-2 text-slate-950">
+              <Mail className="h-5 w-5 text-emerald-700" />
+              <div className="text-base font-bold">راجع الإشعارات</div>
+            </div>
+            <p className="mt-3 text-sm leading-7 text-slate-600">بعد تعديل الحالة أو تأكيد دفعة، راجع السجل سريعاً للتأكد أن التنبيه خرج كما يجب.</p>
+          </article>
+          <article className="rounded-[28px] border border-white/60 bg-white/90 p-5 shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
+            <div className="flex items-center gap-2 text-slate-950">
+              <ArrowLeft className="h-5 w-5 text-emerald-700" />
+              <div className="text-base font-bold">ثم ارجع للعقود</div>
+            </div>
+            <p className="mt-3 text-sm leading-7 text-slate-600">إذا أثرت الصيانة أو الدفعة على القرار النهائي، افتح العقد بعدها مباشرة.</p>
+          </article>
         </section>
 
         <MaintenanceRequestsDashboard />

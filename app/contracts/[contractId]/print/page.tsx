@@ -1,6 +1,7 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { Building2, CalendarRange, CreditCard, FileText, MapPin, ShieldCheck, UserRound } from 'lucide-react'
+import { ArrowLeft, Building2, CalendarRange, CreditCard, FileText, MapPin, ShieldCheck, UserRound } from 'lucide-react'
 import { ContractPrintControls } from '@/components/contract-print-controls'
 import { getContractPrintData } from '@/lib/reporting'
 
@@ -51,10 +52,47 @@ export default async function ContractPrintPage({ params, searchParams }: Contra
         <section className="rounded-[28px] border border-white/60 bg-white/92 p-5 shadow-[0_20px_60px_rgba(16,42,67,0.08)] print:hidden">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-slate-950">نسخة عقد جاهزة للطباعة أو الحفظ PDF</h1>
-              <p className="mt-2 text-sm text-slate-600">يفتح هذا القالب بتنسيق طباعة نظيف حتى يحفظه المكتب مباشرة من المتصفح كملف PDF احترافي.</p>
+              <h1 className="text-2xl font-bold text-slate-950">نسخة عقد جاهزة للطباعة</h1>
+              <p className="mt-2 text-sm text-slate-600">راجع الهوية والقيم أولاً، ثم اطبع أو احفظ PDF.</p>
             </div>
             <ContractPrintControls autoPrint={autoPrint} />
+          </div>
+        </section>
+
+        <section className="grid gap-4 md:grid-cols-3 print:hidden">
+          <article className="rounded-[28px] border border-white/60 bg-white/92 p-5 shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
+            <div className="flex items-center gap-2 text-slate-950">
+              <FileText className="h-5 w-5 text-emerald-700" />
+              <div className="text-base font-bold">راجع الهوية أولاً</div>
+            </div>
+            <p className="mt-3 text-sm leading-7 text-slate-600">تأكد أن اسم المكتب والشعار وبيانات التواصل والتوقيع ظاهرة كما تريد.</p>
+          </article>
+          <article className="rounded-[28px] border border-white/60 bg-white/92 p-5 shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
+            <div className="flex items-center gap-2 text-slate-950">
+              <CreditCard className="h-5 w-5 text-emerald-700" />
+              <div className="text-base font-bold">ثم دقق القيم</div>
+            </div>
+            <p className="mt-3 text-sm leading-7 text-slate-600">الإيجار والتواريخ والحالة المالية هي أهم ما يجب مراجعته قبل الاعتماد.</p>
+          </article>
+          <article className="rounded-[28px] border border-white/60 bg-white/92 p-5 shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
+            <div className="flex items-center gap-2 text-slate-950">
+              <ArrowLeft className="h-5 w-5 text-emerald-700" />
+              <div className="text-base font-bold">إن احتجت تعديلًا</div>
+            </div>
+            <p className="mt-3 text-sm leading-7 text-slate-600">ارجع إلى العقود أو إعدادات المكتب إذا لاحظت نقصاً، ثم افتح النسخة مرة أخرى.</p>
+          </article>
+        </section>
+
+        <section className="rounded-[28px] border border-white/60 bg-white/92 p-5 shadow-[0_20px_60px_rgba(16,42,67,0.08)] print:hidden">
+          <div className="flex flex-wrap gap-3">
+            <Link href="/contracts" className="btn-base btn-secondary">
+              العودة إلى العقود
+              <ArrowLeft className="h-4 w-4" />
+            </Link>
+            <Link href="/office" className="btn-base btn-secondary">
+              تعديل هوية المكتب
+              <Building2 className="h-4 w-4" />
+            </Link>
           </div>
         </section>
 
@@ -137,7 +175,7 @@ export default async function ContractPrintPage({ params, searchParams }: Contra
                   <h3 className="text-base font-bold">القيمة الإيجارية</h3>
                 </div>
                 <div className="mt-4 text-3xl font-bold text-slate-950">{new Intl.NumberFormat('en-US').format(data.contract.rentAmount)} $</div>
-                <div className="mt-2 text-sm text-slate-600">إيجار دوري مع قابلية متابعة الدفعات من لوحة المكتب</div>
+                <div className="mt-2 text-sm text-slate-600">إيجار دوري مع متابعة من لوحة المكتب</div>
               </article>
 
               <article className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm">
@@ -156,12 +194,12 @@ export default async function ContractPrintPage({ params, searchParams }: Contra
             <section className="rounded-[28px] border border-slate-200 bg-slate-50/70 p-6">
               <div className="flex items-center gap-2 text-slate-950">
                 <FileText className="h-4 w-4 text-emerald-700" />
-                <h3 className="text-lg font-bold">بنود مختصرة للطباعة</h3>
+                <h3 className="text-lg font-bold">بنود مختصرة</h3>
               </div>
               <div className="mt-4 grid gap-3 text-sm leading-7 text-slate-700">
-                <p>1. يقر الطرفان بأن هذه النسخة تمثل ملخصاً تشغيلياً للعقد المسجل على المنصة، ويمكن إرفاق النسخة القانونية النهائية بصيغة PDF عند الاعتماد الرسمي.</p>
-                <p>2. يلتزم المستأجر بسداد الإيجار الدوري المتفق عليه ضمن المواعيد المحددة، وتظهر حالة السداد في لوحة المتابعة المالية.</p>
-                <p>3. ترفع طلبات الصيانة عبر بوابة المستأجر أو من خلال المكتب، ويتم تتبع حالتها ضمن لوحة الصيانة الخاصة بالإدارة.</p>
+                <p>1. هذه النسخة تمثل ملخصاً تشغيلياً للعقد المسجل على المنصة.</p>
+                <p>2. يلتزم المستأجر بسداد الإيجار ضمن المواعيد المحددة.</p>
+                <p>3. ترفع طلبات الصيانة عبر البوابة أو من خلال المكتب وتتابع من لوحة الصيانة.</p>
               </div>
             </section>
 

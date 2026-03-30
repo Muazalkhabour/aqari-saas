@@ -44,7 +44,7 @@ export async function ensureOwnerAccount() {
 export async function requireOwnerAccount(): Promise<OwnerAccount> {
   const owner = await ensureOwnerAccount()
   if (!owner) {
-    redirect('/login?error=auth-required')
+    redirect('/auth?mode=signin&role=owner&error=auth-required')
   }
 
   return owner

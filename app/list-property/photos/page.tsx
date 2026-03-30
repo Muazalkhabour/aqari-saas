@@ -11,14 +11,14 @@ export default function ListPropertyPhotosPage() {
             <div className="max-w-3xl">
               <div className="eyebrow-text inline-flex items-center gap-2 rounded-full border border-emerald-800/10 bg-white/70 px-4 py-2 text-emerald-900">
                 <Upload className="h-4 w-4" />
-                صفحة رفع الصور الحقيقية
+                الخطوة 2 من 3
               </div>
               <h1 className="hero-title mt-4 max-w-[38rem] text-[1.55rem] font-bold text-slate-950 sm:text-[1.95rem] lg:text-[2.55rem]">
-                <span className="hero-line">ارفع <span className="hero-highlight">صور عقارك</span> الحقيقية</span>
-                <span className="hero-line mt-2 sm:mt-3">بدلاً من الاكتفاء بالصور التخيلية</span>
+                <span className="hero-line">أضف <span className="hero-highlight">صوراً حقيقية</span> ثم انتقل للمعاينة</span>
+                <span className="hero-line mt-2 sm:mt-3">بدون أي تشتيت إضافي</span>
               </h1>
               <p className="hero-subtitle mt-3 max-w-2xl">
-                هذه الصفحة تساعد المالك على تجهيز صور حقيقية واضحة قبل ربطها لاحقاً بعملية النشر النهائي والتخزين الدائم.
+                ارفع الصور الأساسية أولاً: الصالون أو الواجهة، غرفة النوم، المطبخ، الحمام. بعد ذلك عد إلى المعاينة ثم انشر الإعلان.
               </p>
             </div>
 
@@ -28,7 +28,7 @@ export default function ListPropertyPhotosPage() {
                 <ArrowLeft className="h-4 w-4" />
               </Link>
               <Link href="/list-property/preview" className="btn-base btn-primary">
-                ارجع إلى المعاينة
+                انتقل إلى المعاينة
                 <Camera className="h-4 w-4" />
               </Link>
             </div>

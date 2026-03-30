@@ -324,5 +324,5 @@ export async function markAllInternalNotificationsReadAction() {
 
 export async function tenantLogoutAction() {
   await destroyTenantSession()
-  redirect('/tenant-login')
+  redirect('/auth?mode=signin&role=tenant')
 }

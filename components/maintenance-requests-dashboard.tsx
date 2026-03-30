@@ -106,18 +106,18 @@ export async function MaintenanceRequestsDashboard() {
           <div>
             <div className="inline-flex items-center gap-2 rounded-full bg-emerald-700/10 px-4 py-2 text-sm font-semibold text-emerald-900">
               <LifeBuoy className="h-4 w-4" />
-              لوحة المكتب وطلبات الصيانة
+              لوحة الصيانة
             </div>
             <h2 className="section-title mt-4 text-xl font-bold text-slate-950 sm:text-2xl">طلبات الصيانة الجارية</h2>
             <p className="body-soft mt-2 text-sm text-[var(--muted)]">
-              إدارة حالات الطلبات، المواعيد المجدولة، والمتابعة بين المكتب والمستأجر.
+              راجع الحالة الحالية، حدّث الموعد إذا لزم، ثم احفظ التغيير.
             </p>
           </div>
 
           <form action={dispatchOperationalNotificationsActionWithFormData}>
             <input type="hidden" name="redirectTo" value="/maintenance?info=notifications-dispatched" />
             <button type="submit" className="btn-base btn-primary">
-              تحديث وإرسال الإشعارات
+              إرسال الإشعارات
               <Mail className="h-4 w-4" />
             </button>
           </form>
@@ -127,12 +127,12 @@ export async function MaintenanceRequestsDashboard() {
           <Link href="/maintenance#maintenance-requests" className="rounded-3xl border border-slate-200 bg-slate-50 p-4 transition hover:border-emerald-300 hover:bg-white">
             <div className="stat-label">طلبات مفتوحة</div>
             <div className="mt-2 text-3xl font-bold text-slate-950">{data.maintenanceRequests.length}</div>
-            <div className="mt-2 text-sm text-slate-600">فتح كل الطلبات الجارية</div>
+            <div className="mt-2 text-sm text-slate-600">عرض الطلبات الحالية</div>
           </Link>
           <Link href="/contracts?outstanding=overdue-only" className="rounded-3xl border border-slate-200 bg-slate-50 p-4 transition hover:border-emerald-300 hover:bg-white">
             <div className="stat-label">دفعات متأخرة</div>
             <div className="mt-2 text-3xl font-bold text-slate-950">{data.recentPayments.filter((payment) => payment.status === 'OVERDUE').length}</div>
-            <div className="mt-2 text-sm text-slate-600">فتح جميع المتأخرات</div>
+            <div className="mt-2 text-sm text-slate-600">عرض المتأخرات</div>
           </Link>
           <Link href="/maintenance#maintenance-notification-log" className="rounded-3xl border border-slate-200 bg-slate-50 p-4 transition hover:border-emerald-300 hover:bg-white">
             <div className="stat-label">سجل الإرسال</div>
@@ -141,15 +141,21 @@ export async function MaintenanceRequestsDashboard() {
           </Link>
         </div>
 
+        <div className="mt-6 grid gap-3 md:grid-cols-3">
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">1. ابدأ بالطلبات الجديدة أو العاجلة.</div>
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">2. حدّث الحالة أو الموعد من نفس البطاقة.</div>
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">3. بعد ذلك راجع الدفعات وسجل الإشعار.</div>
+        </div>
+
         <div className="mt-6 rounded-[28px] border border-slate-200 bg-slate-50/80 p-5">
           <div className="flex items-center gap-2 text-slate-950">
             <CircleAlert className="h-5 w-5 text-emerald-700" />
-            <h3 className="text-lg font-bold">تنبيهات تشغيلية سريعة</h3>
+            <h3 className="text-lg font-bold">ما يحتاج انتباهاً الآن</h3>
           </div>
           <div className="mt-4 grid gap-3">
             {operationalAlerts.length === 0 ? (
               <div className="rounded-2xl border border-slate-200 bg-white p-4 text-sm text-slate-600">
-                لا توجد تنبيهات تشغيلية تحتاج تدخلاً فورياً الآن.
+                لا توجد حالات عاجلة الآن.
               </div>
             ) : (
               operationalAlerts.map((alert) => (
@@ -182,7 +188,7 @@ export async function MaintenanceRequestsDashboard() {
                   <div className="mt-2 text-sm leading-7 text-slate-700">{request.description}</div>
                 </div>
 
-                <div className="min-w-[16rem] rounded-3xl border border-slate-200 bg-white p-4">
+                <div className="w-full rounded-3xl border border-slate-200 bg-white p-4 lg:min-w-[16rem] lg:w-auto">
                   <div className="text-xs font-semibold text-[var(--muted)]">الحالة الحالية</div>
                   <div className="mt-1 font-bold text-slate-950">{maintenanceStatusLabel(request.status)}</div>
                   <div className="mt-2 text-xs text-[var(--muted)]">تم الإنشاء: {arabicDate.format(new Date(request.createdAt))}</div>
@@ -192,7 +198,7 @@ export async function MaintenanceRequestsDashboard() {
                       فتح العقد
                     </Link>
                     <Link href="/maintenance#maintenance-payments" className="btn-base btn-secondary btn-sm">
-                      الانتقال للدفعات
+                      افتح الدفعات
                     </Link>
                   </div>
 
@@ -210,7 +216,7 @@ export async function MaintenanceRequestsDashboard() {
                       type="datetime-local"
                       className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none"
                     />
-                    <button type="submit" className="btn-base btn-secondary w-full">حفظ التحديث</button>
+                    <button type="submit" className="btn-base btn-secondary w-full">حفظ الحالة</button>
                   </form>
                 </div>
               </div>
@@ -223,7 +229,7 @@ export async function MaintenanceRequestsDashboard() {
         <article id="maintenance-payments" className="rounded-[32px] border border-slate-900/8 bg-slate-950 p-6 text-white shadow-[0_20px_60px_rgba(15,23,42,0.22)] scroll-mt-28">
           <div className="flex items-center gap-2">
             <CreditCard className="h-5 w-5 text-emerald-300" />
-            <h2 className="section-title text-xl font-bold sm:text-2xl">الدفعات الأخيرة</h2>
+            <h2 className="section-title text-xl font-bold sm:text-2xl">الدفعات التي تحتاج متابعة</h2>
           </div>
 
           <div className="mt-6 space-y-3">
@@ -242,17 +248,17 @@ export async function MaintenanceRequestsDashboard() {
                 </div>
                 <div className="mt-3 flex flex-wrap gap-2">
                   <Link href={`/contracts?query=${encodeURIComponent(payment.tenant.fullName)}`} className="btn-base btn-secondary btn-sm">
-                    فتح العقود المرتبطة
+                    فتح العقود
                   </Link>
                   <Link href="/maintenance#maintenance-requests" className="btn-base btn-secondary btn-sm">
-                    طلبات الصيانة
+                    الطلبات
                   </Link>
                 </div>
                 {payment.status !== 'PAID' ? (
                   <form action={markPaymentAsPaidAction} className="mt-3">
                     <input type="hidden" name="paymentId" value={payment.id} />
                     <button type="submit" className="btn-base btn-secondary w-full">
-                      تأكيد الدفع
+                      تأكيد الدفعة
                       <CheckCircle2 className="h-4 w-4" />
                     </button>
                   </form>
@@ -265,13 +271,13 @@ export async function MaintenanceRequestsDashboard() {
         <article id="maintenance-notification-log" className="rounded-[32px] border border-white/60 bg-white/90 p-6 shadow-[0_20px_60px_rgba(16,42,67,0.08)] scroll-mt-28">
           <div className="flex items-center gap-2 text-slate-950">
             <Mail className="h-5 w-5 text-emerald-700" />
-            <h2 className="section-title text-xl font-bold sm:text-2xl">سجل الإرسال</h2>
+            <h2 className="section-title text-xl font-bold sm:text-2xl">سجل الإشعارات</h2>
           </div>
 
           <div className="mt-6 space-y-3">
             {data.notificationLogs.length === 0 ? (
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-7 text-slate-700">
-                لم يُسجّل أي إرسال بعد. فعّل SMTP ثم استخدم زر الإشعارات لتوليد رسائل حقيقية.
+                لا يوجد سجل بعد. فعّل SMTP ثم استخدم زر الإشعارات لتوليد رسائل فعلية.
               </div>
             ) : (
               data.notificationLogs.map((item) => (

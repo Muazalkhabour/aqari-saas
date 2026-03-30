@@ -67,7 +67,7 @@ export function PropertyDetailsPageClient({
       <main className="min-h-screen px-4 py-6 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl rounded-[36px] border border-dashed border-slate-300 bg-white/90 p-8 text-center shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
           <h1 className="text-2xl font-bold text-slate-950">العقار غير موجود</h1>
-          <p className="body-soft mt-3 text-sm text-[var(--muted)]">قد يكون هذا الإعلان محذوفاً محلياً أو لم يعد متاحاً في هذا المتصفح.</p>
+          <p className="body-soft mt-3 text-sm text-[var(--muted)]">قد يكون هذا العقار غير متاح حالياً. تصفح أحدث العروض أو سجّل اهتمامك لمتابعة كل جديد.</p>
           <div className="mt-5 flex justify-center gap-3">
             <Link href="/search" className="btn-base btn-primary">العودة إلى البحث</Link>
             <Link href="/my-properties" className="btn-base btn-secondary">لوحة عقاراتي</Link>
@@ -85,23 +85,19 @@ export function PropertyDetailsPageClient({
             <div className="max-w-3xl">
               <div className="eyebrow-text inline-flex items-center gap-2 rounded-full border border-emerald-800/10 bg-white/70 px-4 py-2 text-emerald-900">
                 <Building2 className="h-4 w-4" />
-                صفحة تفاصيل العقار
+                تفاصيل العقار
               </div>
               <h1 className="hero-title mt-4 max-w-[40rem] text-[1.55rem] font-bold text-slate-950 sm:text-[1.95rem] lg:text-[2.55rem]">
                 <span className="hero-line">{property.title}</span>
                 <span className="hero-line mt-2 sm:mt-3">في <span className="hero-highlight">{property.governorate}</span> - {property.neighborhood}</span>
               </h1>
-              <p className="hero-subtitle mt-3 max-w-2xl">هذه الصفحة تجمع الصور الكاملة والمواصفات الأساسية ونقاط القوة التي تهم الباحث قبل التواصل مع المالك أو المكتب.</p>
+              <p className="hero-subtitle mt-3 max-w-2xl">راجع الصور والسعر والمواصفات أولاً، ثم قرر إن كنت تريد التواصل.</p>
             </div>
 
             <div className="flex flex-wrap gap-3">
               <Link href="/search" className="btn-base btn-secondary">
                 العودة للبحث
                 <ArrowLeft className="h-4 w-4" />
-              </Link>
-              <Link href={`/search?query=${encodeURIComponent(property.neighborhood)}&type=${encodeURIComponent(property.type)}`} className="btn-base btn-primary">
-                عقارات مشابهة
-                <Sparkles className="h-4 w-4" />
               </Link>
             </div>
           </div>
@@ -138,7 +134,7 @@ export function PropertyDetailsPageClient({
                 <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-700"><div className="flex items-center gap-2 text-[var(--muted)]"><CircleDollarSign className="h-4 w-4" />الفرش</div><div className="mt-1 font-bold text-slate-950">{property.furnishing}</div></div>
               </div>
 
-              <p className="body-soft mt-5 text-sm text-[var(--muted)]">{property.description}</p>
+              <p className="body-soft mt-5 line-clamp-4 text-sm text-[var(--muted)]">{property.description}</p>
 
               <div className="mt-5 rounded-2xl border border-dashed border-slate-200 bg-[var(--surface-strong)] p-4">
                 <div className="flex items-center gap-2 text-sm font-semibold text-slate-950"><Sparkles className="h-4 w-4 text-amber-600" />أبرز نقطة قوة</div>
@@ -160,11 +156,11 @@ export function PropertyDetailsPageClient({
             <LocalContactRequestForm listingId={property.id} listingTitle={property.title} />
 
             <article className="rounded-[32px] border border-slate-900/8 bg-slate-950 p-6 text-white shadow-[0_20px_60px_rgba(15,23,42,0.22)]">
-              <h2 className="section-title text-xl font-bold sm:text-2xl">ما الذي يراه الباحث هنا؟</h2>
+              <h2 className="section-title text-xl font-bold sm:text-2xl">كيف تقرأ هذه الصفحة؟</h2>
               <div className="mt-5 space-y-3 text-sm leading-7 text-white/80">
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">معرض كامل من الصور يختصر الانطباع الأول قبل فتح التواصل.</div>
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">ملخص عملي للمساحة والغرف والحالة والفرش والسعر في نفس الصفحة.</div>
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">نموذج تواصل مباشر يحفظ الطلب لصاحب الإعلان محلياً حتى بدون قاعدة بيانات.</div>
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">ابدأ بالصور والسعر لأنهما أسرع عنصرين للحسم.</div>
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">بعدها راجع المواصفات ونقطة القوة فقط.</div>
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">إذا بقي العقار مناسباً لك، استخدم نموذج التواصل مباشرة.</div>
               </div>
             </article>
           </aside>
@@ -174,7 +170,7 @@ export function PropertyDetailsPageClient({
           <section className="space-y-4">
             <div>
               <h2 className="section-title text-xl font-bold text-slate-950 sm:text-2xl">عقارات مشابهة</h2>
-              <p className="body-soft mt-2 text-sm text-[var(--muted)]">عروض قريبة من نفس المحافظة أو نفس نوع الطلب لمساعدة الزائر على المقارنة السريعة.</p>
+              <p className="body-soft mt-2 text-sm text-[var(--muted)]">عروض قريبة للمقارنة السريعة.</p>
             </div>
             <div className="grid gap-5 xl:grid-cols-2">
               {similarProperties.map((item) => (

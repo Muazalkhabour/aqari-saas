@@ -127,7 +127,7 @@ export function SearchResultsMapClient({ properties }: SearchResultsMapClientPro
           </p>
         </div>
 
-        <button type="button" onClick={requestCurrentLocation} className="btn-base btn-secondary btn-sm self-start">
+        <button type="button" onClick={requestCurrentLocation} className="btn-base btn-secondary btn-sm w-full self-start sm:w-auto">
           حدد موقعي الآن
           <LocateFixed className="h-4 w-4" />
         </button>

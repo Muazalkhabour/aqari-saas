@@ -1,5 +1,3 @@
-import { access, readFile } from 'node:fs/promises'
-import path from 'node:path'
 import fontkit from '@pdf-lib/fontkit'
 import { PDFDocument, PDFFont, StandardFonts, rgb } from 'pdf-lib'
 import { requireProtectedApiUser } from '@/lib/api-guard'
@@ -31,25 +29,17 @@ function formatCurrency(value: number) {
   return `${value.toFixed(0)} USD`
 }
 
-async function loadSystemFont() {
-  const candidateFonts = [
-    'C:\\Windows\\Fonts\\majalla.ttf',
-    'C:\\Windows\\Fonts\\arial.ttf',
-    'C:\\Windows\\Fonts\\ARIALUNI.TTF',
-    'C:\\Windows\\Fonts\\DUBAI-REGULAR.TTF',
-    'C:\\Windows\\Fonts\\trado.ttf',
-  ]
-
-  for (const fontPath of candidateFonts) {
-    try {
-      await access(fontPath)
-      return await readFile(fontPath)
-    } catch {
-      continue
+async function loadEmbeddedArabicFont(requestUrl: string) {
+  try {
+    const response = await fetch(new URL('/fonts/NotoNaskhArabic-Regular.ttf', requestUrl), { cache: 'force-cache' })
+    if (!response.ok) {
+      return null
     }
-  }
 
-  return null
+    return Buffer.from(await response.arrayBuffer())
+  } catch {
+    return null
+  }
 }
 
 async function loadLogoAsset(logoUrl: string | null, requestUrl: string) {
@@ -81,37 +71,22 @@ async function loadLogoAsset(logoUrl: string | null, requestUrl: string) {
   if (logoUrl.startsWith('/')) {
     try {
       const sanitizedPath = logoUrl.split('?')[0].split('#')[0]
-      const localPath = path.join(/* turbopackIgnore: true */ process.cwd(), 'public', sanitizedPath.replace(/^\/+/, '').replace(/\//g, path.sep))
-      const bytes = await readFile(localPath)
       const lowerPath = sanitizedPath.toLowerCase()
       if (!lowerPath.endsWith('.png') && !lowerPath.endsWith('.jpg') && !lowerPath.endsWith('.jpeg')) {
         return null
       }
 
+      const response = await fetch(new URL(sanitizedPath, requestUrl), { cache: 'no-store' })
+      if (!response.ok) {
+        return null
+      }
+
       return {
-        bytes,
+        bytes: Buffer.from(await response.arrayBuffer()),
         type: lowerPath.endsWith('.png') ? 'png' as const : 'jpg' as const,
       }
     } catch {
-      try {
-        const origin = new URL(requestUrl).origin
-        const response = await fetch(`${origin}${logoUrl}`, { cache: 'no-store' })
-        if (!response.ok) {
-          return null
-        }
-
-        const contentType = response.headers.get('content-type') || ''
-        if (!contentType.includes('image/png') && !contentType.includes('image/jpeg') && !contentType.includes('image/jpg')) {
-          return null
-        }
-
-        return {
-          bytes: Buffer.from(await response.arrayBuffer()),
-          type: contentType.includes('png') ? 'png' as const : 'jpg' as const,
-        }
-      } catch {
-        return null
-      }
+      return null
     }
   }
 
@@ -167,11 +142,10 @@ export async function GET(request: Request) {
 
   const pdf = await PDFDocument.create()
   pdf.registerFontkit(fontkit)
-
-  const fontBytes = await loadSystemFont()
+  const arabicFontBytes = await loadEmbeddedArabicFont(request.url)
   const logoAsset = await loadLogoAsset(office.logoUrl, request.url)
-  const font = fontBytes ? await pdf.embedFont(fontBytes) : await pdf.embedFont(StandardFonts.Helvetica)
-  const boldFont = fontBytes ? font : await pdf.embedFont(StandardFonts.HelveticaBold)
+  const font = arabicFontBytes ? await pdf.embedFont(arabicFontBytes) : await pdf.embedFont(StandardFonts.Helvetica)
+  const boldFont = arabicFontBytes ? font : await pdf.embedFont(StandardFonts.HelveticaBold)
   const embeddedLogo = logoAsset
     ? logoAsset.type === 'png'
       ? await pdf.embedPng(logoAsset.bytes)
@@ -182,6 +156,7 @@ export async function GET(request: Request) {
   let cursorY = 790
   const marginX = 40
   const lineHeight = 18
+  const contentWidth = 515
 
   const ensureSpace = (requiredHeight = lineHeight) => {
     if (cursorY - requiredHeight > 40) {
@@ -211,12 +186,36 @@ export async function GET(request: Request) {
     page.drawRectangle({
       x: marginX,
       y: cursorY - height + 6,
-      width: 515,
+      width: contentWidth,
       height,
       color: fillColor,
       borderColor,
       borderWidth: 1,
     })
+  }
+
+  const drawInfoPanel = (items: Array<{ label: string; value: string }>) => {
+    const panelHeight = 24 + items.length * 22
+    drawBox(panelHeight, rgb(0.98, 0.99, 1), rgb(0.86, 0.9, 0.95))
+    items.forEach((item, index) => {
+      page.drawText(item.label, {
+        x: marginX + 16,
+        y: cursorY - 18 - index * 22,
+        size: 9,
+        font: boldFont,
+        color: rgb(0.32, 0.39, 0.47),
+        maxWidth: 180,
+      })
+      page.drawText(item.value, {
+        x: marginX + 170,
+        y: cursorY - 18 - index * 22,
+        size: 10,
+        font,
+        color: rgb(0.1, 0.16, 0.24),
+        maxWidth: 320,
+      })
+    })
+    cursorY -= panelHeight + 12
   }
 
   const drawMetricBox = (label: string, value: string, tone: { fill: ReturnType<typeof rgb>; border: ReturnType<typeof rgb>; text: ReturnType<typeof rgb> }) => {
@@ -229,18 +228,84 @@ export async function GET(request: Request) {
     drawLine(title, { size: 15, color: tone, fontOverride: boldFont, gapAfter: 24 })
 
     if (contracts.length === 0) {
-      drawLine('No contracts in this section.', { gapAfter: 22 })
+      drawBox(42, rgb(0.98, 0.98, 0.99), rgb(0.9, 0.92, 0.95))
+      page.drawText('No contracts in this section.', {
+        x: marginX + 16,
+        y: cursorY - 16,
+        size: 11,
+        font,
+        color: rgb(0.35, 0.4, 0.48),
+        maxWidth: 470,
+      })
+      cursorY -= 54
       return
     }
 
     contracts.forEach((contract, index) => {
-      drawLine(`${index + 1}. ${contract.id} | ${contract.tenantName}`, { gapAfter: 18 })
-      drawLine(`   ${contract.propertyTitle} / Unit ${contract.unitNumber} / End ${formatDate(contract.endDate)}`, { size: 11, gapAfter: 16 })
-      drawLine(`   Rent ${formatCurrency(contract.rentAmount)} / Outstanding ${formatCurrency(contract.totalOutstanding)}`, { size: 11, color: rgb(0.3, 0.35, 0.42), gapAfter: 22 })
+      const cardHeight = 74
+      drawBox(cardHeight, rgb(1, 1, 1), rgb(0.88, 0.91, 0.94))
+      page.drawText(`${index + 1}. ${contract.tenantName}`, {
+        x: marginX + 16,
+        y: cursorY - 16,
+        size: 12,
+        font: boldFont,
+        color: rgb(0.1, 0.16, 0.24),
+        maxWidth: 260,
+      })
+      page.drawText(contract.id, {
+        x: marginX + 390,
+        y: cursorY - 16,
+        size: 10,
+        font,
+        color: rgb(0.42, 0.47, 0.55),
+        maxWidth: 110,
+      })
+      page.drawText(`${contract.propertyTitle} | Unit ${contract.unitNumber}`, {
+        x: marginX + 16,
+        y: cursorY - 38,
+        size: 10,
+        font,
+        color: rgb(0.26, 0.32, 0.39),
+        maxWidth: 300,
+      })
+      page.drawText(`End ${formatDate(contract.endDate)}`, {
+        x: marginX + 350,
+        y: cursorY - 38,
+        size: 10,
+        font,
+        color: rgb(0.26, 0.32, 0.39),
+        maxWidth: 150,
+      })
+      page.drawText(`Rent ${formatCurrency(contract.rentAmount)}`, {
+        x: marginX + 16,
+        y: cursorY - 58,
+        size: 10,
+        font: boldFont,
+        color: rgb(0.08, 0.46, 0.24),
+        maxWidth: 180,
+      })
+      page.drawText(`Outstanding ${formatCurrency(contract.totalOutstanding)}`, {
+        x: marginX + 280,
+        y: cursorY - 58,
+        size: 10,
+        font: boldFont,
+        color: rgb(0.72, 0.45, 0.07),
+        maxWidth: 220,
+      })
+      cursorY -= cardHeight + 12
     })
   }
 
   if (embeddedLogo) {
+    page.drawRectangle({
+      x: marginX,
+      y: cursorY - 18,
+      width: contentWidth,
+      height: 92,
+      color: rgb(0.97, 0.99, 0.98),
+      borderColor: rgb(0.85, 0.91, 0.88),
+      borderWidth: 1,
+    })
     const logoDimensions = embeddedLogo.scaleToFit(64, 64)
     page.drawRectangle({
       x: marginX,
@@ -266,7 +331,7 @@ export async function GET(request: Request) {
       maxWidth: 420,
       lineHeight,
     })
-    page.drawText('Bulk Renewal Summary | ملخص آخر تجديد جماعي', {
+    page.drawText('Bulk Renewal Summary', {
       x: marginX + 94,
       y: cursorY + 18,
       size: 14,
@@ -275,31 +340,37 @@ export async function GET(request: Request) {
       maxWidth: 420,
       lineHeight,
     })
-    cursorY -= 62
+    cursorY -= 84
   } else {
+    page.drawRectangle({
+      x: marginX,
+      y: cursorY - 18,
+      width: contentWidth,
+      height: 72,
+      color: rgb(0.97, 0.99, 0.98),
+      borderColor: rgb(0.85, 0.91, 0.88),
+      borderWidth: 1,
+    })
+    cursorY -= 8
     drawLine(office.name || 'Aqari Office', {
       size: 22,
       fontOverride: boldFont,
       color: rgb(0.06, 0.17, 0.29),
       gapAfter: 20,
     })
-    drawLine('Bulk Renewal Summary | ملخص آخر تجديد جماعي', {
+    drawLine('Bulk Renewal Summary', {
       size: 14,
       fontOverride: boldFont,
       color: rgb(0.21, 0.32, 0.43),
       gapAfter: 18,
     })
   }
-  drawLine(`Generated at: ${new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(persistedSummary?.generatedAt || Date.now()))}`, {
-    size: 11,
-    color: rgb(0.35, 0.4, 0.48),
-    gapAfter: 14,
-  })
-  drawLine(`Office phone: ${office.phone || 'N/A'} | Office email: ${office.email || 'N/A'}`, {
-    size: 10,
-    color: rgb(0.35, 0.4, 0.48),
-    gapAfter: 24,
-  })
+  drawInfoPanel([
+    { label: 'Generated at', value: new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(persistedSummary?.generatedAt || Date.now())) },
+    { label: 'Office phone', value: office.phone || 'N/A' },
+    { label: 'Office email', value: office.email || 'N/A' },
+    { label: 'Prepared by', value: office.signatureName || office.managerName || office.name },
+  ])
 
   drawMetricBox('Renewed Contracts', String(renewedContracts.length), {
     fill: rgb(0.92, 0.98, 0.94),
@@ -326,6 +397,24 @@ export async function GET(request: Request) {
   drawSection('Renewed Contracts', renewedContracts, rgb(0.08, 0.46, 0.24))
   cursorY -= 12
   drawSection('Failed Contracts', failedContracts, rgb(0.72, 0.45, 0.07))
+
+  pdf.getPages().forEach((pdfPage, index) => {
+    const pageWidth = pdfPage.getWidth()
+    pdfPage.drawLine({
+      start: { x: marginX, y: 28 },
+      end: { x: pageWidth - marginX, y: 28 },
+      thickness: 1,
+      color: rgb(0.9, 0.92, 0.95),
+    })
+    pdfPage.drawText(`${office.name || 'Aqari Office'} | Page ${index + 1} of ${pdf.getPageCount()}`, {
+      x: marginX,
+      y: 14,
+      size: 9,
+      font,
+      color: rgb(0.42, 0.47, 0.55),
+      maxWidth: 500,
+    })
+  })
 
   const pdfBytes = await pdf.save()
 

@@ -169,14 +169,14 @@ export default async function ContractsPage({ searchParams }: ContractsPageProps
             <div className="max-w-3xl">
               <div className="eyebrow-text inline-flex items-center gap-2 rounded-full border border-emerald-800/10 bg-white/70 px-4 py-2 text-emerald-900">
                 <FileText className="h-4 w-4" />
-                إدارة العقود من لوحة المكتب
+                إدارة العقود المبسطة
               </div>
               <h1 className="hero-title mt-4 max-w-[36rem] text-[1.55rem] font-bold text-slate-950 sm:text-[1.95rem] lg:text-[2.55rem]">
-                <span className="hero-line">قائمة العقود، التعديل، التجديد، والإنهاء</span>
-                <span className="hero-line mt-2 sm:mt-3">من شاشة تشغيل واحدة</span>
+                <span className="hero-line">ابدأ من العقود المهمة أولاً</span>
+                <span className="hero-line mt-2 sm:mt-3">ثم عدّل أو جدّد أو أنهِ من نفس الصفحة</span>
               </h1>
               <p className="hero-subtitle mt-3 max-w-2xl">
-                هذه الصفحة تربط بين بيانات العقد، حالة الاستحقاقات، وصفحة الطباعة، حتى يدير المكتب دورة العقد كاملة دون التنقل العشوائي بين الصفحات.
+                جعلنا هذه الصفحة أقرب إلى شاشة عمل يومية: راجع العقود القريبة أو المتأخرة أولاً، ثم نفّذ الإجراء المطلوب داخل البطاقة نفسها بدون تشتيت.
               </p>
             </div>
 
@@ -184,10 +184,6 @@ export default async function ContractsPage({ searchParams }: ContractsPageProps
               <Link href="/dashboard" className="btn-base btn-secondary">
                 العودة إلى اللوحة
                 <ArrowLeft className="h-4 w-4" />
-              </Link>
-              <Link href="/contracts/contract-rima/print" className="btn-base btn-secondary" target="_blank" rel="noreferrer">
-                معاينة عقد مطبوع
-                <FileText className="h-4 w-4" />
               </Link>
               <Link href="/contracts/bulk-renew" className="btn-base btn-secondary">
                 تجديد جماعي للعقود القريبة
@@ -201,6 +197,30 @@ export default async function ContractsPage({ searchParams }: ContractsPageProps
               </div>
             </div>
           </div>
+        </section>
+
+        <section className="grid gap-4 md:grid-cols-3">
+          <article className="rounded-[28px] border border-white/60 bg-white/90 p-5 shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
+            <div className="flex items-center gap-2 text-slate-950">
+              <FileText className="h-5 w-5 text-emerald-700" />
+              <div className="text-base font-bold">1. ابدأ من العقود القريبة</div>
+            </div>
+            <p className="mt-3 text-sm leading-7 text-slate-600">أفضل نقطة بداية هنا هي العقود القريبة من الانتهاء أو العقود ذات الدفعات المتأخرة، لأنها الأكثر حساسية في التشغيل اليومي.</p>
+          </article>
+          <article className="rounded-[28px] border border-white/60 bg-white/90 p-5 shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
+            <div className="flex items-center gap-2 text-slate-950">
+              <RefreshCcw className="h-5 w-5 text-emerald-700" />
+              <div className="text-base font-bold">2. استخدم التجديد الجماعي عند الحاجة</div>
+            </div>
+            <p className="mt-3 text-sm leading-7 text-slate-600">عند وجود مجموعة عقود متشابهة، استخدم التجديد الجماعي أولاً ثم راجع نتيجة التنفيذ والتصدير من نفس الصفحة.</p>
+          </article>
+          <article className="rounded-[28px] border border-white/60 bg-white/90 p-5 shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
+            <div className="flex items-center gap-2 text-slate-950">
+              <ShieldCheck className="h-5 w-5 text-emerald-700" />
+              <div className="text-base font-bold">3. راجع الأثر بعد التعديل</div>
+            </div>
+            <p className="mt-3 text-sm leading-7 text-slate-600">بعد تحديث العقد أو إنهائه، انتقل مباشرة إلى الطباعة أو الإشعارات للتأكد أن المسار الإداري اكتمل دون نقص.</p>
+          </article>
         </section>
 
         {bulkRenewSummary ? (

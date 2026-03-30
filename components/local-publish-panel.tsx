@@ -24,7 +24,7 @@ export function LocalPublishPanel({ values }: LocalPublishPanelProps) {
 
       const listing = createListingFromFormData(formData)
       upsertLocalListing(listing)
-      setFeedback('تم نشر الإعلان محلياً داخل هذا المتصفح، ويمكنك الآن إدارته من لوحة المالك.')
+      setFeedback('تم نشر الإعلان بنجاح، ويمكنك الآن متابعته واستقبال الطلبات من لوحة المالك.')
       router.push(`/my-properties?highlight=${listing.id}`)
     })
   }
@@ -33,11 +33,11 @@ export function LocalPublishPanel({ values }: LocalPublishPanelProps) {
     <article className="rounded-[32px] border border-emerald-900/10 bg-emerald-700/5 p-6 shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
       <div className="flex items-center gap-2 text-slate-950">
         <UploadCloud className="h-5 w-5 text-emerald-700" />
-        <h2 className="section-title text-xl font-bold sm:text-2xl">نشر محلي فوري</h2>
+        <h2 className="section-title text-xl font-bold sm:text-2xl">نشر الإعلان</h2>
       </div>
 
       <p className="body-soft mt-3 text-sm text-[var(--muted)]">
-        هذا الزر ينشر العقار محلياً داخل المتصفح الحالي بدون قاعدة بيانات، ثم يضيفه إلى صفحة البحث ولوحة عقاراتي ويفعل استقبال طلبات التواصل عليه.
+        انشر إعلانك الآن ليظهر ضمن البحث ويبدأ باستقبال الاهتمام والطلبات من الزوار.
       </p>
 
       <button
@@ -46,7 +46,7 @@ export function LocalPublishPanel({ values }: LocalPublishPanelProps) {
         disabled={isPending}
         className="btn-base btn-primary mt-5 w-full"
       >
-        {isPending ? 'جارٍ نشر الإعلان...' : 'انشر الإعلان محلياً الآن'}
+        {isPending ? 'جارٍ نشر الإعلان...' : 'انشر الآن'}
         {isPending ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <UploadCloud className="h-4 w-4" />}
       </button>
 

@@ -37,7 +37,7 @@ export function OwnerPreviewGallery({ fallbackImages }: OwnerPreviewGalleryProps
         <h2 className="section-title text-xl font-bold text-slate-950 sm:text-2xl">معرض صور إعلانك</h2>
         <p className="body-soft mt-2 text-sm text-[var(--muted)]">
           {ownerPhotos.length > 0
-            ? 'هذه صور حقيقية محفوظة محلياً داخل نفس المتصفح، لذلك تراها الآن في المعاينة حتى من دون قاعدة بيانات.'
+            ? 'هذه صور إعلانك الحالية كما ستظهر للباحث، فراجعها جيداً قبل النشر النهائي.'
             : 'هذه معاينة مرئية تساعدك على تخيل شكل الإعلان عندما يراه الباحث، مع ترتيب يبدأ بالصورة الأهم ثم اللقطات المساندة.'}
         </p>
       </div>
@@ -45,7 +45,7 @@ export function OwnerPreviewGallery({ fallbackImages }: OwnerPreviewGalleryProps
       <div className="mt-4 flex flex-wrap gap-2">
         <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold ${ownerPhotos.length > 0 ? 'bg-emerald-700/10 text-emerald-900' : 'bg-slate-100 text-slate-700'}`}>
           {ownerPhotos.length > 0 ? <Camera className="h-4 w-4" /> : <DatabaseZap className="h-4 w-4" />}
-          {ownerPhotos.length > 0 ? `تم تحميل ${ownerPhotos.length} صورة حقيقية محلياً` : 'لا توجد صور مرفوعة بعد، لذلك تظهر الصور التخيلية'}
+          {ownerPhotos.length > 0 ? `تم تحميل ${ownerPhotos.length} صورة لإبراز الإعلان` : 'أضف صورك لتجعل الإعلان أكثر إقناعاً وجاذبية'}
         </div>
       </div>
 

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowLeft, Camera, CheckCircle2, Eye, RefreshCw } from 'lucide-react'
+import { Camera, CheckCircle2, Eye, RefreshCw } from 'lucide-react'
 import { LocalPublishPanel } from '@/components/local-publish-panel'
 import { OwnerPreviewGallery } from '@/components/owner-preview-gallery'
 import { PropertyCard } from '@/components/property-card'
@@ -102,14 +102,14 @@ export default async function ListPropertyPreviewPage({ searchParams }: PreviewP
             <div className="max-w-3xl">
               <div className="eyebrow-text inline-flex items-center gap-2 rounded-full border border-emerald-800/10 bg-white/75 px-4 py-2 text-emerald-900">
                 <Eye className="h-4 w-4" />
-                معاينة إعلانك قبل النشر
+                الخطوة 3 من 3
               </div>
               <h1 className="hero-title mt-4 max-w-[34rem] text-[1.55rem] font-bold text-slate-950 sm:text-[1.95rem] lg:text-[2.55rem]">
-                <span className="hero-line">أصبح <span className="hero-highlight">إعلانك</span> أوضح</span>
-                <span className="hero-line mt-2 sm:mt-3">ويمكنك تقييمه قبل النشر</span>
+                <span className="hero-line">راجع المعاينة</span>
+                <span className="hero-line mt-2 sm:mt-3">ثم انشر أو عدّل</span>
               </h1>
               <p className="hero-subtitle mt-4 max-w-xl">
-                إذا بدا العنوان والسعر والوصف مقنعين هنا، فغالباً ستكون فرص التفاعل أفضل بعد النشر.
+                هذه آخر محطة قبل النشر. إذا كان العنوان والسعر والصور واضحين هنا، فانشر وانتقل بعدها إلى لوحة المالك.
               </p>
             </div>
 
@@ -122,15 +122,8 @@ export default async function ListPropertyPreviewPage({ searchParams }: PreviewP
                 <RefreshCw className="h-4 w-4" />
               </Link>
               <Link
-                href="/search"
-                className="btn-base btn-primary"
-              >
-                ارجع إلى البحث
-                <ArrowLeft className="h-4 w-4" />
-              </Link>
-              <Link
                 href="/list-property/photos"
-                className="btn-base btn-secondary"
+                className="btn-base btn-primary"
               >
                 ارفع الصور الحقيقية
                 <Camera className="h-4 w-4" />
@@ -149,21 +142,21 @@ export default async function ListPropertyPreviewPage({ searchParams }: PreviewP
             <article className="rounded-[32px] border border-white/60 bg-white/90 p-6 shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
               <div className="flex items-center gap-2 text-slate-950">
                 <CheckCircle2 className="h-5 w-5 text-emerald-700" />
-                <h2 className="section-title text-xl font-bold sm:text-2xl">ما الذي تم تجهيزه لك؟</h2>
+                <h2 className="section-title text-xl font-bold sm:text-2xl">ما الذي تراجعه؟</h2>
               </div>
               <div className="mt-5 space-y-3 text-sm leading-7 text-[var(--muted)]">
-                <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">العنوان والحي والسعر يظهرون من أول نظرة، وهي العناصر التي تحدد استمرار الزائر في القراءة.</div>
-                <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">المواصفات تحولت إلى بطاقة واضحة تسهّل مقارنة عقارك بأي عرض آخر.</div>
-                <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">أبرز نقطة قوة ظهرت بشكل مستقل حتى لا تضيع داخل الوصف.</div>
+                <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">هل العنوان والحي والسعر واضحون من أول نظرة؟</div>
+                <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">هل المواصفات كافية للمقارنة السريعة؟</div>
+                <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">هل ظهرت نقطة القوة بوضوح؟</div>
               </div>
             </article>
 
             <article className="rounded-[32px] border border-slate-900/8 bg-slate-950 p-6 text-white shadow-[0_20px_60px_rgba(15,23,42,0.22)]">
               <h2 className="section-title text-xl font-bold sm:text-2xl">خطوتك التالية كمالك</h2>
               <div className="mt-5 space-y-3 text-sm leading-7 text-white/80">
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">أضف 6 إلى 10 صور مرتبة تبدأ بالصالة ثم الواجهة ثم المطبخ والحمامات.</div>
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">إذا كان السعر قابلاً للتفاوض، اذكر ذلك بوضوح لرفع جودة الاتصالات.</div>
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">يمكنك الآن الانتقال إلى صفحة رفع الصور الحقيقية من المالك ومعاينتها مباشرة داخل المتصفح.</div>
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">إذا كانت الصور ناقصة، عد لصفحة الصور الآن.</div>
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">إذا كانت البيانات مكتملة، استخدم زر النشر أدناه.</div>
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">بعد النشر ستجد الإعلان في لوحة المالك مباشرة.</div>
               </div>
             </article>
 

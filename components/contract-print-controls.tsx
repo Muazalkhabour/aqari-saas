@@ -24,12 +24,8 @@ export function ContractPrintControls({ autoPrint }: ContractPrintControlsProps)
   return (
     <div className="print:hidden flex flex-wrap items-center gap-3">
       <button type="button" onClick={() => window.print()} className="btn-base btn-primary">
-        حفظ أو طباعة PDF
+        طباعة أو حفظ PDF
         <Printer className="h-4 w-4" />
-      </button>
-      <button type="button" onClick={() => window.print()} className="btn-base btn-secondary">
-        تنزيل العقد
-        <Download className="h-4 w-4" />
       </button>
       <Link href="/dashboard" className="btn-base btn-secondary">
         العودة إلى اللوحة

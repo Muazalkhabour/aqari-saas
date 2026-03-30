@@ -31,7 +31,7 @@ export async function proxy(request: NextRequest) {
         return response
       }
 
-      return NextResponse.redirect(new URL('/login?error=auth-unavailable', request.url))
+      return NextResponse.redirect(new URL('/auth?mode=signin&role=manager&error=auth-unavailable', request.url))
     }
 
     return response
@@ -69,7 +69,7 @@ export async function proxy(request: NextRequest) {
       return response
     }
 
-    return NextResponse.redirect(new URL('/login', request.url))
+    return NextResponse.redirect(new URL('/auth?mode=signin&role=manager', request.url))
   }
 
   if (user && request.nextUrl.pathname.startsWith('/login')) {

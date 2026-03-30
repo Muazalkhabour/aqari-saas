@@ -201,7 +201,7 @@ export async function requireTenantSession() {
   const session = await getTenantSession()
 
   if (!session?.tenant?.id) {
-    redirect('/tenant-login')
+    redirect('/auth?mode=signin&role=tenant')
   }
 
   return session

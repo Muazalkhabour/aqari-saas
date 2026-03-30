@@ -49,8 +49,8 @@ type ViewerContext = {
 
 const publicShortcutLinks = [
   { href: '/', label: 'الرئيسية', icon: Home },
-  { href: '/list-property', label: 'أضف عقارك', icon: Building2 },
-  { href: '/search', label: 'ابحث الآن', icon: Search },
+  { href: '/search', label: 'البحث', icon: Search },
+  { href: '/auth?mode=signin', label: 'بوابة الدخول', icon: ShieldCheck },
 ] as const
 
 function isRoleActive(pathname: string, matches: string[]) {
@@ -69,26 +69,10 @@ function getPathFromHref(href: string) {
   return href.split('?')[0]?.split('#')[0] || href
 }
 
-function getRolePillClassName(isActive: boolean, compact = false) {
-  if (isActive) {
-    return compact
-      ? 'ui-active-pill'
-      : 'ui-active-card'
-  }
-
-  return compact
-    ? 'bg-white/92 text-slate-700 shadow-[0_8px_24px_rgba(16,42,67,0.08)] hover:bg-white'
-    : 'border-white/60 bg-white/88 text-slate-800 shadow-[0_12px_30px_rgba(16,42,67,0.08)] hover:bg-white'
-}
-
 function getDefaultHeaderPillClassName(isActive: boolean) {
   return isActive
     ? 'ui-active-pill'
     : 'bg-white text-slate-700 shadow-[0_10px_30px_rgba(15,23,42,0.08)] hover:bg-slate-50'
-}
-
-function getTenantHeaderPillClassName() {
-  return 'bg-white text-slate-700 shadow-[0_10px_30px_rgba(15,23,42,0.08)] hover:bg-slate-50'
 }
 
 function getRoleIconClassName(isActive: boolean, isTenant: boolean) {
@@ -110,6 +94,7 @@ function getRoleDescriptionClassName(isActive: boolean, isTenant: boolean) {
 export function GlobalProtectedHeader() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const authRole = searchParams.get('role')
   const [quickStats, setQuickStats] = useState<QuickStats | null>(null)
   const [viewerContext, setViewerContext] = useState<ViewerContext | null>(null)
   const isProtected = isProtectedPathname(pathname)
@@ -193,14 +178,19 @@ export function GlobalProtectedHeader() {
       ? '/dashboard?mode=demo'
       : viewerContext?.demoAvailable
         ? '/dashboard?mode=demo'
-        : '/login'
+        : '/auth?mode=signin&role=manager'
   const officeEntryLabel = viewerContext?.officeAuthenticated
     ? 'لوحة المكتب'
     : viewerContext?.demoAvailable
       ? 'معاينة الإدارة'
       : 'دخول المكتب'
-  const tenantEntryHref = viewerContext?.tenantAuthenticated ? '/tenant-portal' : '/tenant-login'
+  const tenantEntryHref = viewerContext?.tenantAuthenticated ? '/tenant-portal' : '/auth?mode=signin&role=tenant'
   const tenantEntryLabel = viewerContext?.tenantAuthenticated ? 'بوابة المستأجر' : 'دخول المستأجر'
+  const ownerEntryHref = pathname.startsWith('/list-property')
+    ? '/list-property/preview'
+    : pathname.startsWith('/my-properties')
+      ? '/my-properties'
+      : '/auth?mode=signin&role=owner'
 
   const roleLinks = [
     {
@@ -209,28 +199,21 @@ export function GlobalProtectedHeader() {
       description: viewerContext?.officeAuthenticated
         ? `جلسة مكتب نشطة${viewerContext.officeEmail ? `: ${viewerContext.officeEmail}` : ''}`
         : canUseDemoNavigation
-          ? 'معاينة development نشطة للتنقل داخل الإدارة'
+          ? 'ابدأ من هنا لمتابعة الإدارة والعقود والإشعارات'
           : 'لوحة التشغيل والعقود والإشعارات',
       icon: ShieldCheck,
       matches: ['/dashboard', '/contracts', '/notifications', '/maintenance', '/office'],
     },
     {
-      href: pathname.startsWith('/list-property') ? '/list-property/preview' : '/my-properties',
+      href: ownerEntryHref,
       label: 'صاحب عقار',
       description: pathname.startsWith('/list-property')
         ? 'أكمل المعاينة أو ارفع الصور أو عد إلى لوحة المالك'
-        : 'الإضافة والنشر والمتابعة المحلية',
+        : pathname.startsWith('/my-properties')
+          ? 'الإضافة والنشر ومتابعة الطلبات'
+          : 'ابدأ من بوابة المالك ثم انتقل إلى لوحة عقاراتك',
       icon: UserRound,
       matches: ['/my-properties', '/list-property'],
-    },
-    {
-      href: pathname.startsWith('/properties') ? pathname : '/search',
-      label: 'عميل',
-      description: pathname.startsWith('/properties')
-        ? 'أنت داخل صفحة عقار عامة الآن'
-        : 'البحث واستعراض العقارات العامة',
-      icon: Search,
-      matches: ['/search', '/properties'],
     },
     {
       href: tenantEntryHref,
@@ -242,11 +225,6 @@ export function GlobalProtectedHeader() {
       matches: ['/tenant-login', '/tenant-portal'],
     },
   ]
-
-  const compactRoleLinks = roleLinks.map((item) => ({
-    ...item,
-    isActive: isRoleActive(pathname, item.matches),
-  }))
 
   const protectedNavItems = navItems.map((item) => ({
     ...item,
@@ -261,11 +239,11 @@ export function GlobalProtectedHeader() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-white/60 bg-[rgba(247,248,251,0.9)] shadow-[0_14px_40px_rgba(15,23,42,0.06)] backdrop-blur-xl">
+      <header className="relative z-40 border-b border-white/60 bg-[rgba(247,248,251,0.9)] shadow-[0_14px_40px_rgba(15,23,42,0.06)] backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 sm:px-6 lg:px-8">
           <div className="rounded-[24px] border border-white/70 bg-white/84 px-3 py-3 shadow-[0_12px_30px_rgba(16,42,67,0.08)] backdrop-blur">
             <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-              <div className="flex flex-wrap gap-2">
+              <div className="no-scrollbar flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
                 {publicShortcutLinks.map((item) => {
                   const Icon = item.icon
                   const itemPath = getPathFromHref(item.href)
@@ -275,7 +253,7 @@ export function GlobalProtectedHeader() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${getDefaultHeaderPillClassName(isActive)}`}
+                      className={`inline-flex shrink-0 items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold transition sm:px-4 sm:text-sm ${getDefaultHeaderPillClassName(isActive)}`}
                     >
                       <Icon className="h-4 w-4" />
                       {item.label}
@@ -284,35 +262,18 @@ export function GlobalProtectedHeader() {
                 })}
                 <Link
                   href={officeEntryHref}
-                  className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${getDefaultHeaderPillClassName(pathname === '/login' || isProtected)}`}
+                  className={`inline-flex shrink-0 items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold transition sm:px-4 sm:text-sm ${getDefaultHeaderPillClassName((pathname === '/auth' && authRole === 'manager') || pathname === '/login' || isProtected)}`}
                 >
                   <ShieldCheck className="h-4 w-4" />
                   {officeEntryLabel}
                 </Link>
                 <Link
                   href={tenantEntryHref}
-                  className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${getTenantHeaderPillClassName()}`}
+                  className={`inline-flex shrink-0 items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold transition sm:px-4 sm:text-sm ${getDefaultHeaderPillClassName((pathname === '/auth' && authRole === 'tenant') || pathname.startsWith('/tenant-portal'))}`}
                 >
                   <KeyRound className="h-4 w-4" />
                   {tenantEntryLabel}
                 </Link>
-              </div>
-
-              <div className="flex flex-wrap gap-2">
-                {compactRoleLinks.map((item) => {
-                  const Icon = item.icon
-
-                  return (
-                    <Link
-                      key={`compact-${item.label}`}
-                      href={item.href}
-                      className={`inline-flex items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold transition ${item.label === 'مستأجر' ? getTenantHeaderPillClassName() : getRolePillClassName(item.isActive, true)}`}
-                    >
-                      <Icon className="h-3.5 w-3.5" />
-                      {item.label}
-                    </Link>
-                  )
-                })}
               </div>
             </div>
           </div>
@@ -321,50 +282,39 @@ export function GlobalProtectedHeader() {
 
       {!isProtected ? null : (
         <section className="border-b border-white/60 bg-[linear-gradient(180deg,rgba(248,250,252,0.96),rgba(248,250,252,0.9))]">
-          <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
-            <div className="rounded-[28px] border border-white/70 bg-white/88 p-4 shadow-[0_14px_36px_rgba(16,42,67,0.08)] backdrop-blur sm:p-5">
-              <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
-                <div className="max-w-2xl">
-                  <div className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-800/80">Office Control</div>
-                  <div className="mt-1 text-lg font-bold text-slate-950 sm:text-xl">شريط تنقل موحّد للصفحات المحمية</div>
-                  <div className="mt-1 text-sm text-slate-600">روابط الإدارة السريعة موجودة هنا، لكن القسم لم يعد ثابتًا فوق المحتوى أثناء النزول داخل الصفحة.</div>
-                </div>
-
-                <div className="inline-flex self-start rounded-full border border-emerald-700/12 bg-emerald-700/10 px-4 py-2 text-sm font-semibold text-emerald-900">
+          <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
+            <div className="rounded-[24px] border border-white/70 bg-white/86 p-3 shadow-[0_12px_28px_rgba(16,42,67,0.06)] backdrop-blur sm:p-4">
+              <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                <div className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500">
+                  <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1">لوحة محمية</span>
                   {isLoading ? (
-                    <span className="inline-flex items-center gap-2">
+                    <span className="inline-flex items-center gap-2 rounded-full border border-emerald-700/12 bg-emerald-700/10 px-3 py-1 text-emerald-900">
                       <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-emerald-500" />
                       جاري تحميل الإشعارات...
                     </span>
                   ) : (
-                    <span>إشعارات غير مقروءة: {quickStats.unreadCount}</span>
+                    <span className="rounded-full border border-emerald-700/12 bg-emerald-700/10 px-3 py-1 text-emerald-900">إشعارات غير مقروءة: {quickStats.unreadCount}</span>
                   )}
                 </div>
-              </div>
 
-              <div className="mt-4 grid gap-3 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
-                <div className="rounded-[24px] border border-slate-200/80 bg-slate-50/80 p-3">
-                  <div className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">روابط تشغيل سريعة</div>
-                  <div className="flex flex-wrap gap-2">
-                    <Link href={protectedQuickLinks[0]} className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-[0_10px_24px_rgba(15,23,42,0.06)] hover:bg-slate-50">
+                <div className="no-scrollbar flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
+                  <Link href={protectedQuickLinks[0]} className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-[0_8px_20px_rgba(15,23,42,0.05)] hover:bg-slate-50 sm:px-4 sm:text-sm">
                       <RefreshCcw className="h-4 w-4" />
                       تجديد جماعي
                       {!isLoading && quickStats.endingSoonCount > 0 ? <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-950">{quickStats.endingSoonCount}</span> : null}
-                    </Link>
-                    <Link href={protectedQuickLinks[1]} className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-[0_10px_24px_rgba(15,23,42,0.06)] hover:bg-slate-50">
+                  </Link>
+                  <Link href={protectedQuickLinks[1]} className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-[0_8px_20px_rgba(15,23,42,0.05)] hover:bg-slate-50 sm:px-4 sm:text-sm">
                       متأخرات
                       {!isLoading && quickStats.overduePaymentsCount > 0 ? <span className="rounded-full bg-rose-100 px-2 py-0.5 text-xs font-bold text-rose-900">{quickStats.overduePaymentsCount}</span> : null}
-                    </Link>
-                    <Link href={protectedQuickLinks[2]} className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-[0_10px_24px_rgba(15,23,42,0.06)] hover:bg-slate-50">
+                  </Link>
+                  <Link href={protectedQuickLinks[2]} className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-[0_8px_20px_rgba(15,23,42,0.05)] hover:bg-slate-50 sm:px-4 sm:text-sm">
                       صيانة مفتوحة
                       {!isLoading && quickStats.maintenanceOpenCount > 0 ? <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-900">{quickStats.maintenanceOpenCount}</span> : null}
-                    </Link>
-                  </div>
+                  </Link>
                 </div>
+              </div>
 
-                <div className="rounded-[24px] border border-slate-200/80 bg-slate-50/80 p-3">
-                  <div className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">تنقل الإدارة</div>
-                  <nav className="flex flex-wrap gap-2">
+              <nav className="mt-3 no-scrollbar flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
                     {protectedNavItems.map((item) => {
                       const Icon = item.icon
                       const itemPath = getPathFromHref(item.href)
@@ -375,7 +325,7 @@ export function GlobalProtectedHeader() {
                         <Link
                           key={item.href}
                           href={item.href}
-                          className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${isActive ? 'ui-active-pill' : 'bg-white text-slate-700 shadow-[0_10px_24px_rgba(15,23,42,0.06)] hover:bg-slate-50'}`}
+                          className={`inline-flex shrink-0 items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold transition sm:px-4 sm:text-sm ${isActive ? 'ui-active-pill' : 'bg-white text-slate-700 shadow-[0_8px_20px_rgba(15,23,42,0.05)] hover:bg-slate-50'}`}
                         >
                           <Icon className="h-4 w-4" />
                           {item.label}
@@ -383,44 +333,41 @@ export function GlobalProtectedHeader() {
                         </Link>
                       )
                     })}
-                  </nav>
-                </div>
-              </div>
+              </nav>
             </div>
           </div>
         </section>
       )}
 
       <section className="border-b border-white/60 bg-[linear-gradient(180deg,rgba(248,250,252,0.96),rgba(248,250,252,0.88))]">
-        <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-3 xl:flex-row xl:items-end xl:justify-between">
+            <div className="flex flex-col gap-2 xl:flex-row xl:items-end xl:justify-between">
               <div>
-                <div className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-800/80">Role Switch</div>
-                <div className="mt-1 text-xl font-bold text-slate-950">شريط تنقل موحّد بين المدير وصاحب العقار والعميل</div>
-                <div className="mt-1 text-sm text-slate-600">اختر المنظور الذي تريد العمل منه ثم أكمل مباشرة من الروابط الأقرب للسياق الحالي.</div>
+                <div className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-800/80">المسارات</div>
+                <div className="mt-1 text-base font-bold text-slate-950 sm:text-lg">بدّل المسار بسرعة من دون إزاحة المحتوى.</div>
               </div>
             </div>
 
-            <div className="grid gap-3 lg:grid-cols-2 xl:grid-cols-4">
+            <div className="grid gap-3 lg:grid-cols-3">
               {roleLinks.map((item) => {
                 const Icon = item.icon
-                const isActive = isRoleActive(pathname, item.matches)
-                const isTenant = item.label === 'مستأجر'
+                const isAuthActive = pathname === '/auth' && ((item.label === 'المدير' && authRole === 'manager') || (item.label === 'صاحب عقار' && authRole === 'owner') || (item.label === 'مستأجر' && authRole === 'tenant'))
+                const isActive = isRoleActive(pathname, item.matches) || isAuthActive
 
                 return (
                   <Link
                     key={item.label}
                     href={item.href}
-                    className={`rounded-[24px] border px-4 py-4 transition ${isTenant ? 'border-white/60 bg-white/88 text-slate-800 shadow-[0_12px_30px_rgba(16,42,67,0.08)] hover:bg-white' : getRolePillClassName(isActive)}`}
+                    className={`rounded-[20px] border px-3 py-3 transition ${isActive ? 'ui-active-card' : 'border-white/60 bg-white/88 text-slate-800 shadow-[0_10px_24px_rgba(16,42,67,0.06)] hover:bg-white'}`}
                   >
                     <div className="flex items-center gap-3">
-                      <div className={`rounded-2xl p-3 ${getRoleIconClassName(isActive, isTenant)}`}>
+                      <div className={`rounded-2xl p-2.5 ${getRoleIconClassName(isActive, false)}`}>
                         <Icon className="h-5 w-5" />
                       </div>
-                      <div>
-                        <div className="text-base font-bold">{item.label}</div>
-                        <div className={`mt-1 text-sm ${getRoleDescriptionClassName(isActive, isTenant)}`}>{item.description}</div>
+                      <div className="min-w-0">
+                        <div className="text-sm font-bold sm:text-base">{item.label}</div>
+                        <div className={`mt-1 text-xs sm:text-sm ${getRoleDescriptionClassName(isActive, false)}`}>{item.description}</div>
                       </div>
                     </div>
                   </Link>

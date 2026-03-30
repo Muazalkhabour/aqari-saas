@@ -33,7 +33,7 @@ export function PropertyPreviewVisual({ property, compact = false }: PropertyPre
       </div>
 
       <div className="absolute left-4 top-4 rounded-full bg-slate-950/82 px-3 py-1.5 text-xs font-semibold text-white shadow-sm">
-        صورة داخلية تخيلية
+        صورة توضيحية للعقار
       </div>
 
       <div className="absolute bottom-4 right-4 left-4 flex flex-wrap items-center justify-between gap-3 rounded-[20px] border border-white/60 bg-white/80 px-4 py-3 shadow-sm backdrop-blur">
