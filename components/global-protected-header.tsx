@@ -49,6 +49,7 @@ type ViewerContext = {
 
 const publicShortcutLinks = [
   { href: '/', label: 'الرئيسية', icon: Home },
+  { href: '/#available-apartments', label: 'الشقق المتوفرة', icon: Building2 },
   { href: '/search', label: 'البحث', icon: Search },
   { href: '/auth?mode=signin', label: 'بوابة الدخول', icon: ShieldCheck },
 ] as const
@@ -344,8 +345,8 @@ export function GlobalProtectedHeader() {
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2 xl:flex-row xl:items-end xl:justify-between">
               <div>
-                <div className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-800/80">المسارات</div>
-                <div className="mt-1 text-base font-bold text-slate-950 sm:text-lg">بدّل المسار بسرعة من دون إزاحة المحتوى.</div>
+                    <div className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-800/80">الأقسام</div>
+                    <div className="mt-1 text-base font-bold text-slate-950 sm:text-lg">تنقّل بسرعة بين أقسام المنصة.</div>
               </div>
             </div>
 
