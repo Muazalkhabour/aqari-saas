@@ -81,7 +81,8 @@ export function PropertyDetailsPageClient({
     )
   }
 
-  const shareText = `شاهد ${property.title} في ${property.governorate} بسعر ${property.priceLabel} على عقاري سوريا`
+  const resolvedProperty = property
+  const shareText = `شاهد ${resolvedProperty.title} في ${resolvedProperty.governorate} بسعر ${resolvedProperty.priceLabel} على عقاري سوريا`
   const whatsappShareUrl = `https://wa.me/?text=${encodeURIComponent(`${shareText}\n${currentShareUrl}`)}`
   const telegramShareUrl = `https://t.me/share/url?url=${encodeURIComponent(currentShareUrl)}&text=${encodeURIComponent(shareText)}`
 
@@ -93,7 +94,7 @@ export function PropertyDetailsPageClient({
 
     try {
       await navigator.share({
-        title: `${property.title} | عقاري سوريا`,
+        title: `${resolvedProperty.title} | عقاري سوريا`,
         text: shareText,
         url: currentShareUrl,
       })
@@ -122,8 +123,8 @@ export function PropertyDetailsPageClient({
                 تفاصيل العقار
               </div>
               <h1 className="hero-title mt-4 max-w-[40rem] text-[1.55rem] font-bold text-slate-950 sm:text-[1.95rem] lg:text-[2.55rem]">
-                <span className="hero-line">{property.title}</span>
-                <span className="hero-line mt-2 sm:mt-3">في <span className="hero-highlight">{property.governorate}</span> - {property.neighborhood}</span>
+                <span className="hero-line">{resolvedProperty.title}</span>
+                <span className="hero-line mt-2 sm:mt-3">في <span className="hero-highlight">{resolvedProperty.governorate}</span> - {resolvedProperty.neighborhood}</span>
               </h1>
               <p className="hero-subtitle mt-3 max-w-2xl">راجع الصور والسعر والمواصفات أولاً، ثم قرر إن كنت تريد التواصل.</p>
             </div>
@@ -138,45 +139,45 @@ export function PropertyDetailsPageClient({
         </section>
 
         <section className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
-          <OwnerAwarePropertySlider title={property.title} fallbackImages={initialGallery} preferredImages={preferredImages} />
+          <OwnerAwarePropertySlider title={resolvedProperty.title} fallbackImages={initialGallery} preferredImages={preferredImages} />
 
           <aside className="space-y-6">
             <article className="rounded-[32px] border border-white/60 bg-white/92 p-6 shadow-[0_20px_60px_rgba(16,42,67,0.08)]">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <div className="flex flex-wrap gap-2">
-                    <span className={`inline-flex rounded-full px-3 py-1 text-xs font-bold text-white ${property.type === 'بيع' ? 'bg-orange-500' : 'bg-emerald-700'}`}>
-                      {property.type}
+                    <span className={`inline-flex rounded-full px-3 py-1 text-xs font-bold text-white ${resolvedProperty.type === 'بيع' ? 'bg-orange-500' : 'bg-emerald-700'}`}>
+                      {resolvedProperty.type}
                     </span>
-                    <span className="inline-flex rounded-full bg-slate-950 px-3 py-1 text-xs font-semibold text-white">{property.ownership}</span>
+                    <span className="inline-flex rounded-full bg-slate-950 px-3 py-1 text-xs font-semibold text-white">{resolvedProperty.ownership}</span>
                   </div>
                   <div className="mt-4 flex items-center gap-2 text-sm text-[var(--muted)]">
                     <MapPin className="h-4 w-4 text-emerald-800" />
-                    <span>{property.governorate} - {property.district} - {property.neighborhood}</span>
+                    <span>{resolvedProperty.governorate} - {resolvedProperty.district} - {resolvedProperty.neighborhood}</span>
                   </div>
                 </div>
                 <div className="rounded-2xl bg-slate-950 px-4 py-3 text-right text-white">
                   <div className="stat-label !text-white/60">السعر</div>
-                  <div className="mt-1 text-sm font-bold">{property.priceLabel}</div>
+                  <div className="mt-1 text-sm font-bold">{resolvedProperty.priceLabel}</div>
                 </div>
               </div>
 
               <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-700"><div className="flex items-center gap-2 text-[var(--muted)]"><Ruler className="h-4 w-4" />المساحة</div><div className="mt-1 font-bold text-slate-950">{property.areaSqm} م²</div></div>
-                <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-700"><div className="flex items-center gap-2 text-[var(--muted)]"><BedDouble className="h-4 w-4" />الغرف</div><div className="mt-1 font-bold text-slate-950">{property.rooms} غرف</div></div>
-                <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-700"><div className="flex items-center gap-2 text-[var(--muted)]"><Bath className="h-4 w-4" />الحمامات</div><div className="mt-1 font-bold text-slate-950">{property.bathrooms}</div></div>
-                <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-700"><div className="flex items-center gap-2 text-[var(--muted)]"><CircleDollarSign className="h-4 w-4" />الفرش</div><div className="mt-1 font-bold text-slate-950">{property.furnishing}</div></div>
+                <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-700"><div className="flex items-center gap-2 text-[var(--muted)]"><Ruler className="h-4 w-4" />المساحة</div><div className="mt-1 font-bold text-slate-950">{resolvedProperty.areaSqm} م²</div></div>
+                <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-700"><div className="flex items-center gap-2 text-[var(--muted)]"><BedDouble className="h-4 w-4" />الغرف</div><div className="mt-1 font-bold text-slate-950">{resolvedProperty.rooms} غرف</div></div>
+                <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-700"><div className="flex items-center gap-2 text-[var(--muted)]"><Bath className="h-4 w-4" />الحمامات</div><div className="mt-1 font-bold text-slate-950">{resolvedProperty.bathrooms}</div></div>
+                <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-700"><div className="flex items-center gap-2 text-[var(--muted)]"><CircleDollarSign className="h-4 w-4" />الفرش</div><div className="mt-1 font-bold text-slate-950">{resolvedProperty.furnishing}</div></div>
               </div>
 
-              <p className="body-soft mt-5 line-clamp-4 text-sm text-[var(--muted)]">{property.description}</p>
+              <p className="body-soft mt-5 line-clamp-4 text-sm text-[var(--muted)]">{resolvedProperty.description}</p>
 
               <div className="mt-5 rounded-2xl border border-dashed border-slate-200 bg-[var(--surface-strong)] p-4">
                 <div className="flex items-center gap-2 text-sm font-semibold text-slate-950"><Sparkles className="h-4 w-4 text-amber-600" />أبرز نقطة قوة</div>
-                <p className="body-soft mt-2 text-sm text-[var(--muted)]">{property.highlight}</p>
+                <p className="body-soft mt-2 text-sm text-[var(--muted)]">{resolvedProperty.highlight}</p>
               </div>
 
               <div className="mt-5 flex flex-wrap gap-2">
-                {property.features.map((feature) => (
+                {resolvedProperty.features.map((feature) => (
                   <span key={feature} className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700">{feature}</span>
                 ))}
               </div>
@@ -209,11 +210,11 @@ export function PropertyDetailsPageClient({
 
               <div className="mt-5 flex items-center gap-2 border-t border-slate-100 pt-4 text-sm text-slate-700">
                 <ShieldCheck className="h-4 w-4 text-emerald-700" />
-                الجهة المعلنة: {property.contactName}
+                الجهة المعلنة: {resolvedProperty.contactName}
               </div>
             </article>
 
-            <LocalContactRequestForm listingId={property.id} listingTitle={property.title} />
+            <LocalContactRequestForm listingId={resolvedProperty.id} listingTitle={resolvedProperty.title} />
 
             <article className="rounded-[32px] border border-slate-900/8 bg-slate-950 p-6 text-white shadow-[0_20px_60px_rgba(15,23,42,0.22)]">
               <h2 className="section-title text-xl font-bold sm:text-2xl">كيف تقرأ هذه الصفحة؟</h2>
