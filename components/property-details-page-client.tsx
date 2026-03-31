@@ -1,8 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { useMemo, useSyncExternalStore } from 'react'
-import { ArrowLeft, Bath, BedDouble, Building2, CircleDollarSign, MapPin, Ruler, ShieldCheck, Sparkles } from 'lucide-react'
+import { useMemo, useState, useSyncExternalStore } from 'react'
+import { ArrowLeft, Bath, BedDouble, Building2, CircleDollarSign, Copy, MapPin, MessageCircle, Ruler, Send, Share2, ShieldCheck, Sparkles } from 'lucide-react'
 import { LocalContactRequestForm } from '@/components/local-contact-request-form'
 import { OwnerAwarePropertySlider } from '@/components/owner-aware-property-slider'
 import { PropertyCard } from '@/components/property-card'
@@ -23,6 +23,7 @@ type PropertyDetailsPageClientProps = {
   initialProperty: SyrianProperty | null
   initialGallery: PropertyGalleryImage[]
   initialSimilarProperties: SyrianProperty[]
+  shareUrl: string
 }
 
 export function PropertyDetailsPageClient({
@@ -30,8 +31,11 @@ export function PropertyDetailsPageClient({
   initialProperty,
   initialGallery,
   initialSimilarProperties,
+  shareUrl,
 }: PropertyDetailsPageClientProps) {
   const localListings = useSyncExternalStore(subscribeLocalListings, loadLocalMarketplaceListings, () => EMPTY_LOCAL_LISTINGS)
+  const [currentShareUrl] = useState(() => (typeof window === 'undefined' ? shareUrl : window.location.href))
+  const [copyFeedback, setCopyFeedback] = useState('نسخ الرابط')
 
   const localListing = useMemo(() => {
     if (initialProperty) {
@@ -75,6 +79,36 @@ export function PropertyDetailsPageClient({
         </div>
       </main>
     )
+  }
+
+  const shareText = `شاهد ${property.title} في ${property.governorate} بسعر ${property.priceLabel} على عقاري سوريا`
+  const whatsappShareUrl = `https://wa.me/?text=${encodeURIComponent(`${shareText}\n${currentShareUrl}`)}`
+  const telegramShareUrl = `https://t.me/share/url?url=${encodeURIComponent(currentShareUrl)}&text=${encodeURIComponent(shareText)}`
+
+  async function handleNativeShare() {
+    if (typeof navigator === 'undefined' || !navigator.share) {
+      await handleCopyLink()
+      return
+    }
+
+    try {
+      await navigator.share({
+        title: `${property.title} | عقاري سوريا`,
+        text: shareText,
+        url: currentShareUrl,
+      })
+    } catch {
+    }
+  }
+
+  async function handleCopyLink() {
+    if (typeof navigator === 'undefined' || !navigator.clipboard) {
+      return
+    }
+
+    await navigator.clipboard.writeText(currentShareUrl)
+    setCopyFeedback('تم النسخ')
+    window.setTimeout(() => setCopyFeedback('نسخ الرابط'), 1800)
   }
 
   return (
@@ -145,6 +179,32 @@ export function PropertyDetailsPageClient({
                 {property.features.map((feature) => (
                   <span key={feature} className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700">{feature}</span>
                 ))}
+              </div>
+
+              <div className="mt-5 rounded-[28px] border border-emerald-900/10 bg-[linear-gradient(135deg,rgba(15,23,42,0.03),rgba(5,150,105,0.08))] p-4">
+                <div className="flex items-center gap-2 text-sm font-semibold text-slate-950">
+                  <Share2 className="h-4 w-4 text-emerald-700" />
+                  شارك هذا العقار بسرعة
+                </div>
+                <p className="body-soft mt-2 text-sm text-[var(--muted)]">أرسل الرابط مباشرة عبر واتساب أو تلغرام، أو انسخه للمشاركة اليدوية.</p>
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  <button type="button" onClick={handleNativeShare} className="inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-900">
+                    <Share2 className="h-4 w-4" />
+                    مشاركة سريعة
+                  </button>
+                  <button type="button" onClick={handleCopyLink} className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 transition hover:border-emerald-700/30 hover:text-emerald-800">
+                    <Copy className="h-4 w-4" />
+                    {copyFeedback}
+                  </button>
+                  <a href={whatsappShareUrl} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-2xl border border-emerald-700/15 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-900 transition hover:bg-emerald-100">
+                    <MessageCircle className="h-4 w-4" />
+                    واتساب
+                  </a>
+                  <a href={telegramShareUrl} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-2xl border border-sky-500/15 bg-sky-50 px-4 py-3 text-sm font-semibold text-sky-900 transition hover:bg-sky-100">
+                    <Send className="h-4 w-4" />
+                    تلغرام
+                  </a>
+                </div>
               </div>
 
               <div className="mt-5 flex items-center gap-2 border-t border-slate-100 pt-4 text-sm text-slate-700">

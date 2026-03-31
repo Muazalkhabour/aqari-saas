@@ -54,8 +54,8 @@ function getModeLabel(mode: AuthMode) {
 function getModeDescription(mode: AuthMode, role: AuthRole | null) {
   if (!role) {
     return mode === 'signin'
-      ? 'اختر نوع الحساب أولاً، ثم سنعرض لك نموذج الدخول المناسب فقط.'
-      : 'اختر نوع المستخدم أولاً، ثم سنعرض لك البداية الأنسب داخل المنصة.'
+      ? 'اختر نوع الحساب أولاً لنفتح لك نموذج الدخول المناسب مباشرة.'
+      : 'اختر نوع المستخدم أولاً لنوجّهك إلى البداية الأنسب داخل المنصة.'
   }
 
   if (mode === 'signin' && role) {
@@ -71,14 +71,14 @@ function getModeDescription(mode: AuthMode, role: AuthRole | null) {
   }
 
   if (role === 'owner') {
-    return 'ابدأ تجهيز الإعلان والصور أولاً، ثم أكمل إلى لوحة المالك من نفس المسار.'
+    return 'ابدأ تجهيز الإعلان والصور أولاً، ثم انتقل إلى لوحة المالك بخطوات واضحة.'
   }
 
   if (role === 'tenant') {
-    return 'حساب المستأجر يرتبط عادة بعقد فعال داخل النظام، لذلك هذا المسار يوضح لك متى تدخل ومتى يكفي التصفح.'
+    return 'حساب المستأجر يرتبط عادة بعقد فعال داخل النظام، لذلك نوضح لك متى تحتاج الدخول ومتى يكفيك التصفح.'
   }
 
-  return 'حسابات الإدارة تُنشأ مركزياً عادة، لذلك هذا المسار يوضح متى تستخدم الدخول المباشر ومتى تعود للتصفح العام.'
+  return 'حسابات الإدارة تُفعّل عادة من فريق المنصة، لذلك نوضح لك متى تستخدم الدخول المباشر ومتى تكتفي بالتصفح العام.'
 }
 
 function getRoleActionLabel(mode: AuthMode, role: AuthRole) {
@@ -99,7 +99,7 @@ function getRoleActionLabel(mode: AuthMode, role: AuthRole) {
   }
 
   if (role === 'tenant') {
-    return 'فهم مسار المستأجر'
+    return 'الدخول كمستأجر'
   }
 
   return 'حسابات الإدارة'
@@ -107,7 +107,7 @@ function getRoleActionLabel(mode: AuthMode, role: AuthRole) {
 
 function getRoleStepTitle(role: AuthRole | null) {
   if (!role) {
-    return 'اختر الدور أولاً حتى لا نعرض لك مساراً لا يخصك.'
+    return 'اختر الدور أولاً حتى نعرض لك الخيار الذي يناسبك فقط.'
   }
 
   if (role === 'manager') {
@@ -215,21 +215,21 @@ const roleMeta: Record<AuthRole, {
     label: 'مدير المنصة',
     badge: 'تشغيل وإدارة',
     title: 'ادخل إلى لوحة الإدارة والعقود والإشعارات',
-    description: 'هذا المسار مخصص للمدير أو المكتب المسؤول عن تشغيل المنصة والعقارات والعقود وطلبات الصيانة.',
+    description: 'مخصص للمدير أو المكتب المسؤول عن تشغيل المنصة والعقود وطلبات الصيانة والمتابعة اليومية.',
     icon: LayoutDashboard,
   },
   owner: {
     label: 'صاحب عقار',
     badge: 'إضافة ومتابعة',
     title: 'ادخل لمتابعة عقاراتك أو ابدأ تجهيز إعلانك',
-    description: 'هذا المسار مخصص لمالك العقار الذي يريد إدارة الإعلانات ومتابعة الطلبات والصور وحالة النشر.',
+    description: 'مخصص لمالك العقار الذي يريد إدارة الإعلانات ومتابعة الطلبات والصور وحالة النشر.',
     icon: Building2,
   },
   tenant: {
     label: 'مستأجر',
     badge: 'عقد ودفعات',
     title: 'ادخل إلى بوابة المستأجر والعقد والدفعات',
-    description: 'هذا المسار يخدم المستأجر للوصول إلى عقده، دفعاته، والتنبيهات وطلبات الصيانة الخاصة به.',
+    description: 'مخصص للمستأجر للوصول إلى عقده ودفعاته والتنبيهات وطلبات الصيانة الخاصة به.',
     icon: KeyRound,
   },
 }
@@ -261,16 +261,16 @@ export default async function AuthPage({ searchParams }: AuthPageProps) {
             <div className="space-y-6">
               <div className="eyebrow-text reveal-fade-up inline-flex items-center gap-2 rounded-full border border-emerald-800/10 bg-white/75 px-4 py-2 text-emerald-900">
                 <Sparkles className="h-4 w-4" />
-                بوابة موحدة للدخول أو بدء الاستخدام
+                بوابة موحدة للدخول والانضمام
               </div>
 
               <div className="reveal-fade-up reveal-delay-1 space-y-4">
                 <h1 className="hero-title max-w-[36rem] text-[1.65rem] font-bold text-slate-950 sm:text-[2.05rem] lg:text-[2.85rem]">
-                  <span className="hero-line">بوابة واحدة بدل صفحات متفرقة</span>
-                  <span className="hero-line mt-2 sm:mt-3">ابدأ من <span className="hero-highlight">دورك الصحيح</span> ثم أكمل الإجراء المناسب</span>
+                  <span className="hero-line">ادخل من المكان الصحيح</span>
+                  <span className="hero-line mt-2 sm:mt-3">واتجه مباشرة إلى <span className="hero-highlight">التجربة المناسبة</span> لدورك</span>
                 </h1>
                 <p className="hero-subtitle max-w-2xl">
-                  هذا المسار صار مرتباً على ثلاث خطوات واضحة: اختر الدور، اختر نوع الإجراء، ثم أكمل إلى المكان المناسب دون خلط بين الإدارة والمالك والمستأجر.
+                  كل شيء هنا واضح من البداية: اختر الدور، حدّد نوع الإجراء، ثم انتقل إلى الصفحة المناسبة دون خلط بين الإدارة والمالك والمستأجر.
                 </p>
               </div>
 
@@ -289,7 +289,7 @@ export default async function AuthPage({ searchParams }: AuthPageProps) {
                   <div className="text-xs font-semibold text-slate-500">الخطوة 3</div>
                   <div className="mt-2 text-base font-bold text-slate-950">النتيجة</div>
                   <div className="mt-2 text-sm text-slate-600">
-                    {role === 'manager' ? 'لوحة الإدارة' : role === 'owner' ? 'لوحة عقاراتي أو مسار إعداد الإعلان' : 'بوابة المستأجر'}
+                    {role === 'manager' ? 'لوحة الإدارة' : role === 'owner' ? 'لوحة عقاراتي أو إعداد الإعلان' : 'بوابة المستأجر'}
                   </div>
                 </div>
               </div>
@@ -337,7 +337,7 @@ export default async function AuthPage({ searchParams }: AuthPageProps) {
                 <div className="reveal-fade-up reveal-delay-3 rounded-[28px] border border-slate-900/6 bg-slate-950 p-6 text-white">
                   <div className="text-sm text-white/60">قبل أي نموذج</div>
                   <div className="mt-2 text-2xl font-bold">اختر نوع الحساب أولاً ثم أكمل.</div>
-                  <div className="mt-3 text-sm leading-7 text-white/75">بهذه الطريقة لا نفتح لك نموذج إدارة إذا كنت مالكاً، ولا نعرض لك مسار مستأجر إذا كنت تريد فقط نشر عقار.</div>
+                  <div className="mt-3 text-sm leading-7 text-white/75">بهذه الطريقة لا نفتح لك نموذج إدارة إذا كنت مالكاً، ولا نعرض لك بوابة المستأجر إذا كان هدفك الآن فقط نشر عقار.</div>
                 </div>
               )}
 
@@ -370,7 +370,7 @@ export default async function AuthPage({ searchParams }: AuthPageProps) {
                   </div>
                   <div className="mt-3 grid gap-2 text-xs text-white/78 sm:grid-cols-3">
                     <div className="rounded-2xl bg-white/8 px-3 py-3">إشعارات مرتبة</div>
-                    <div className="rounded-2xl bg-white/8 px-3 py-3">مسار واضح لكل دور</div>
+                    <div className="rounded-2xl bg-white/8 px-3 py-3">تجربة واضحة لكل دور</div>
                     <div className="rounded-2xl bg-white/8 px-3 py-3">انتقال أسرع للوحة المناسبة</div>
                   </div>
                 </div>
@@ -463,7 +463,7 @@ export default async function AuthPage({ searchParams }: AuthPageProps) {
                   </div>
 
                   <div className="mt-5 rounded-[24px] border border-slate-200 bg-slate-50/80 p-4">
-                    <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">المسار الحالي</div>
+                    <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">الاختيار الحالي</div>
                     <div className="mt-2 text-base font-bold text-slate-950">
                       {selectedRole.label} / {currentModeLabel}
                     </div>
@@ -511,7 +511,7 @@ export default async function AuthPage({ searchParams }: AuthPageProps) {
                       </form>
 
                       <div className="mt-5 rounded-3xl border border-emerald-200 bg-emerald-50 p-4 text-sm leading-7 text-emerald-950">
-                        هذا المسار مخصص للمستأجرين المشتركين في المنصة للوصول السريع إلى العقود والدفعات وطلبات الصيانة والتنبيهات.
+                        هذه البوابة مخصصة للمستأجرين المشتركين في المنصة للوصول السريع إلى العقود والدفعات وطلبات الصيانة والتنبيهات.
                       </div>
                     </>
                   ) : (
@@ -556,9 +556,9 @@ export default async function AuthPage({ searchParams }: AuthPageProps) {
                       <div className="mt-5 rounded-3xl border border-amber-200 bg-amber-50 p-4 text-sm leading-7 text-amber-950">
                         {isSupabaseReady
                           ? role === 'owner'
-                            ? 'إذا نجح الدخول فسيتم توجيهك مباشرة إلى لوحة صاحب العقار بدلاً من خلطك مع مسار الإدارة.'
+                            ? 'إذا نجح الدخول فسيتم توجيهك مباشرة إلى لوحة صاحب العقار بدلاً من نقلك إلى قسم لا يخصك.'
                             : 'إذا نجح الدخول فسيتم توجيهك مباشرة إلى لوحة الإدارة حيث تبدأ كل مهام التشغيل.'
-                          : 'هذا المسار مخصص للحسابات المعتمدة. إذا لم يكن لديك حساب بعد، ابدأ بطلب الانضمام وسيصلك كل جديد وتحديث من فريق المنصة.'}
+                          : 'هذه البوابة مخصصة للحسابات المعتمدة. إذا لم يكن لديك حساب بعد، ابدأ بطلب الانضمام وسيصلك كل جديد وتحديث من فريق المنصة.'}
                       </div>
                     </>
                   )}
@@ -612,7 +612,7 @@ export default async function AuthPage({ searchParams }: AuthPageProps) {
                         <div className="text-lg font-bold">حسابات الإدارة</div>
                       </div>
                       <p className="body-soft mt-3 text-sm text-[var(--muted)]">
-                        هذا المسار مخصص لإدارة التشغيل والعقود والمتابعة اليومية داخل المنصة من حساب معتمد.
+                        هذه البوابة مخصصة لإدارة التشغيل والعقود والمتابعة اليومية داخل المنصة من حساب معتمد.
                       </p>
                       <div className="mt-4 flex flex-wrap gap-3">
                         <Link href={buildRoleHref('signin', 'manager')} className="btn-base btn-primary">

@@ -200,8 +200,8 @@ export function GlobalProtectedHeader() {
       description: viewerContext?.officeAuthenticated
         ? `جلسة مكتب نشطة${viewerContext.officeEmail ? `: ${viewerContext.officeEmail}` : ''}`
         : canUseDemoNavigation
-          ? 'ابدأ من هنا لمتابعة الإدارة والعقود والإشعارات'
-          : 'لوحة التشغيل والعقود والإشعارات',
+          ? 'الدخول إلى الإدارة والعقود والإشعارات من مكان واحد'
+          : 'الإدارة والعقود والإشعارات في لوحة واحدة',
       icon: ShieldCheck,
       matches: ['/dashboard', '/contracts', '/notifications', '/maintenance', '/office'],
     },
@@ -209,10 +209,10 @@ export function GlobalProtectedHeader() {
       href: ownerEntryHref,
       label: 'صاحب عقار',
       description: pathname.startsWith('/list-property')
-        ? 'أكمل المعاينة أو ارفع الصور أو عد إلى لوحة المالك'
+        ? 'أكمل المعاينة أو ارفع الصور أو ارجع إلى لوحة المالك'
         : pathname.startsWith('/my-properties')
-          ? 'الإضافة والنشر ومتابعة الطلبات'
-          : 'ابدأ من بوابة المالك ثم انتقل إلى لوحة عقاراتك',
+          ? 'إضافة العقارات ونشرها ومتابعة الطلبات'
+          : 'الدخول إلى بوابة المالك ثم متابعة عقاراتك',
       icon: UserRound,
       matches: ['/my-properties', '/list-property'],
     },
@@ -221,7 +221,7 @@ export function GlobalProtectedHeader() {
       label: 'مستأجر',
       description: viewerContext?.tenantAuthenticated && viewerContext.tenantName
         ? `جلسة مستأجر نشطة: ${viewerContext.tenantName}`
-        : 'البوابة والعقد والدفعات',
+        : 'العقد والدفعات والتنبيهات في مكان واحد',
       icon: KeyRound,
       matches: ['/tenant-login', '/tenant-portal'],
     },
@@ -240,6 +240,31 @@ export function GlobalProtectedHeader() {
 
   return (
     <>
+      <section className="relative overflow-hidden border-b border-slate-900/10 bg-[linear-gradient(90deg,#031b1a_0%,#0b3b37_32%,#102a43_68%,#3f2a1d_100%)]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.18),transparent_18%),radial-gradient(circle_at_bottom_left,rgba(249,115,22,0.14),transparent_22%)]" />
+        <div className="mx-auto flex max-w-7xl justify-center gap-3 px-4 py-2.5 sm:items-center sm:justify-between sm:px-6 lg:px-8">
+          <div className="relative mx-auto flex min-w-0 w-full max-w-[22rem] items-center gap-3 rounded-[24px] border border-emerald-200/10 bg-slate-950/38 px-4 py-2.5 shadow-[0_16px_40px_rgba(2,6,23,0.24)] backdrop-blur-xl sm:mx-0 sm:w-auto sm:max-w-none sm:px-4 sm:py-3">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[18px] border border-emerald-200/14 bg-[linear-gradient(180deg,rgba(16,185,129,0.22),rgba(15,23,42,0.46))] text-emerald-100 shadow-[0_12px_26px_rgba(2,6,23,0.22)] sm:h-12 sm:w-12">
+              <Building2 className="h-5 w-5" />
+            </div>
+            <div className="min-w-0 py-0.5">
+              <div className="flex items-center gap-2">
+                <span className="text-[0.72rem] font-semibold tracking-[0.24em] text-emerald-100/72">AQARI</span>
+                <span className="h-1 w-1 rounded-full bg-orange-300/70" />
+                <span className="text-[0.72rem] font-semibold tracking-[0.18em] text-white/56">REAL ESTATE</span>
+              </div>
+              <div className="mt-0.5 text-base font-bold leading-none text-white sm:text-lg">عقاري</div>
+              <div className="mt-2 text-[11px] leading-5 text-white/54 sm:text-xs">منصة عقارية للعروض والإدارة والمتابعة بثقة أوضح</div>
+            </div>
+          </div>
+
+          <div className="hidden items-center gap-2 rounded-full border border-emerald-200/10 bg-slate-950/28 px-4 py-2 text-xs font-semibold text-white/80 shadow-[0_10px_24px_rgba(2,6,23,0.18)] backdrop-blur-xl sm:inline-flex">
+            <span className="h-2 w-2 rounded-full bg-emerald-300/90 shadow-[0_0_10px_rgba(110,231,183,0.4)]" />
+            كل ما تحتاجه للعقار في واجهة واحدة
+          </div>
+        </div>
+      </section>
+
       <header className="relative z-40 border-b border-white/60 bg-[rgba(247,248,251,0.9)] shadow-[0_14px_40px_rgba(15,23,42,0.06)] backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 sm:px-6 lg:px-8">
           <div className="rounded-[24px] border border-white/70 bg-white/84 px-3 py-3 shadow-[0_12px_30px_rgba(16,42,67,0.08)] backdrop-blur">
@@ -346,7 +371,7 @@ export function GlobalProtectedHeader() {
             <div className="flex flex-col gap-2 xl:flex-row xl:items-end xl:justify-between">
               <div>
                     <div className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-800/80">الأقسام</div>
-                    <div className="mt-1 text-base font-bold text-slate-950 sm:text-lg">تنقّل بسرعة بين أقسام المنصة.</div>
+                    <div className="mt-1 text-base font-bold text-slate-950 sm:text-lg">وصول أسرع إلى الأقسام التي تحتاجها.</div>
               </div>
             </div>
 

@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { ArrowLeft, Building2, DoorOpen, Search, ShieldCheck, Sparkles } from 'lucide-react'
-import { DeveloperCredit } from '@/components/developer-credit'
 import { HomePlatformShowcase } from '@/components/home-platform-showcase'
 import { PropertyGallery } from '@/components/property-gallery'
 import { PropertyCard } from '@/components/property-card'
@@ -27,7 +26,7 @@ export default function Home() {
             <div className="order-2 space-y-6 lg:order-1">
               <div className="eyebrow-text reveal-fade-up inline-flex w-full items-center justify-center gap-2 rounded-full border border-emerald-800/10 bg-white/75 px-4 py-2 text-center text-emerald-900 sm:w-auto sm:justify-start">
                 <Sparkles className="h-4 w-4" />
-                اكتشف العروض الجديدة وابدأ رحلتك العقارية من هنا
+                منصة عقارية تجمع الاكتشاف والمتابعة في مكان واحد
               </div>
 
               <div className="reveal-fade-up reveal-delay-1 space-y-4">
@@ -36,7 +35,7 @@ export default function Home() {
                   <span className="hero-line mt-2 sm:mt-3">وتابع أفضل <span className="hero-highlight">الفرص والتحديثات</span> أولاً بأول</span>
                 </h1>
                 <p className="hero-subtitle max-w-xl">
-                  تصفح العروض المميزة، قارن بسهولة، ثم ادخل إلى حسابك أو ابدأ الانضمام لتبقى قريباً من كل جديد في السوق.
+                  استكشف العروض المميزة، قارن بثقة، ثم تابع من حسابك كل فرصة جديدة وكل تحديث يؤثر على قرارك العقاري.
                 </p>
               </div>
 
@@ -90,14 +89,14 @@ export default function Home() {
                   href="/search"
                   className="btn-base btn-primary w-full sm:w-auto"
                 >
-                  ابدأ البحث الآن
+                  اكتشف العروض الآن
                   <Search className="h-4 w-4" />
                 </Link>
                 <Link
                   href="/auth?mode=signin"
                   className="btn-base btn-secondary w-full sm:w-auto"
                 >
-                  دخول أو إنشاء حساب
+                  ادخل إلى حسابك المناسب
                   <DoorOpen className="h-4 w-4" />
                 </Link>
               </div>
@@ -110,14 +109,14 @@ export default function Home() {
         <section className="rounded-[28px] border border-slate-900/6 bg-white/65 p-5 shadow-[0_10px_30px_rgba(16,42,67,0.05)]">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <h2 className="section-title text-lg font-bold text-slate-950 sm:text-xl">ثلاثة مسارات واضحة بعد الواجهة الرئيسية</h2>
+              <h2 className="section-title text-lg font-bold text-slate-950 sm:text-xl">ثلاثة أقسام تخدم كل خطوة عقارية</h2>
               <p className="body-soft mt-2 max-w-2xl text-sm text-[var(--muted)]">
-                سواء كنت تبحث عن عقار، أو تدير إعلانك، أو تتابع عقدك، ستجد المسار المناسب بسرعة ومن دون تعقيد.
+                سواء كنت تبحث عن عقار، أو تعرض وحدتك، أو تتابع عقدك، ستصل إلى القسم المناسب بسرعة ووضوح.
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Link href="/auth?mode=signin" className="btn-base btn-secondary w-full sm:w-auto">
-                افتح بوابة الدخول الموحدة
+                افتح بوابة الحسابات
                 <DoorOpen className="h-4 w-4" />
               </Link>
               <Link href="/search" className="btn-base btn-secondary w-full sm:w-auto">
@@ -133,22 +132,22 @@ export default function Home() {
                 <Search className="h-5 w-5 text-emerald-700" />
                 <div className="text-base font-bold">باحث عن عقار</div>
               </div>
-              <p className="mt-3 text-sm leading-7 text-slate-600">هذا المستخدم لا يحتاج أن يرى تفاصيل الإدارة أو النشر. يكفيه البحث، الفلاتر، وصفحات العقارات.</p>
-              <p className="mt-3 text-sm leading-7 text-slate-600">ابدأ من هنا لاكتشاف العروض المناسبة ومتابعة ما يستحق اهتمامك.</p>
+              <p className="mt-3 text-sm leading-7 text-slate-600">ركّز على البحث، الفلاتر، وصفحات العقارات من دون تشتيت بتفاصيل لا تخص قرارك الآن.</p>
+              <p className="mt-3 text-sm leading-7 text-slate-600">ابدأ بالمقارنة، ثم احفظ ما يناسبك وتابع ما يستحق اهتمامك.</p>
             </article>
             <article className="rounded-[24px] border border-slate-200/70 bg-slate-50/75 p-4">
               <div className="flex items-center gap-2 text-slate-950">
                 <Building2 className="h-5 w-5 text-emerald-700" />
                 <div className="text-base font-bold">صاحب عقار</div>
               </div>
-              <p className="mt-3 text-sm leading-7 text-slate-600">أضف إعلانك، حسّن حضوره، وابقَ قريباً من الطلبات والتحديثات أولاً بأول.</p>
+              <p className="mt-3 text-sm leading-7 text-slate-600">أضف عقارك، حسّن ظهوره، وابقَ قريباً من الطلبات والاستفسارات والتحديثات المهمة.</p>
             </article>
             <article className="rounded-[24px] border border-slate-200/70 bg-slate-50/75 p-4">
               <div className="flex items-center gap-2 text-slate-950">
                 <ShieldCheck className="h-5 w-5 text-emerald-700" />
                 <div className="text-base font-bold">مدير أو مستأجر</div>
               </div>
-              <p className="mt-3 text-sm leading-7 text-slate-600">إدارة أو متابعة أو سكن، كل تجربة تبدأ من مدخل واضح وتستمر برسائل وتحديثات منظمة.</p>
+              <p className="mt-3 text-sm leading-7 text-slate-600">لكل دور لوحة واضحة ورسائل مرتبة ومتابعة مستمرة لما يهمك داخل المنصة.</p>
             </article>
           </div>
         </section>
@@ -178,7 +177,6 @@ export default function Home() {
           </div>
         </section>
 
-        <DeveloperCredit prominent />
       </div>
     </main>
   )

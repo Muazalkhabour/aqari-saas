@@ -42,7 +42,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                 <span className="hero-line mt-2 sm:mt-3">وتابع الفرص المناسبة لك بسهولة</span>
               </h1>
               <p className="hero-subtitle mt-3 max-w-xl">
-                ابدأ بالمكان أو النوع، ثم صفِّ النتائج حتى تصل إلى العقار الذي يستحق متابعتك أو تواصلك مباشرة.
+                ابدأ بالحي أو النوع، ثم صفِّ النتائج حتى تصل بسرعة إلى العقار الذي يستحق تواصلك وقرارك التالي.
               </p>
             </div>
             <Link href="/" className="btn-base btn-secondary">

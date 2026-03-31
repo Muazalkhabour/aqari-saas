@@ -110,3 +110,33 @@ export function getRateLimitStorageDriver() {
     ? 'redis'
     : 'file'
 }
+
+function normalizeSiteUrl(value: string) {
+  const trimmedValue = value.trim()
+
+  if (!trimmedValue) {
+    return ''
+  }
+
+  if (trimmedValue.startsWith('http://') || trimmedValue.startsWith('https://')) {
+    return trimmedValue
+  }
+
+  return `https://${trimmedValue}`
+}
+
+export function getSiteUrl() {
+  const configuredUrl = normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL || '')
+
+  if (configuredUrl) {
+    return configuredUrl
+  }
+
+  const vercelUrl = normalizeSiteUrl(process.env.VERCEL_URL || '')
+
+  if (vercelUrl) {
+    return vercelUrl
+  }
+
+  return 'http://localhost:3000'
+}

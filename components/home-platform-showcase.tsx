@@ -1,5 +1,6 @@
 'use client'
 
+import type { CSSProperties } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { BellRing, Building2, FileText, MapPinned } from 'lucide-react'
 
@@ -7,13 +8,35 @@ export function HomePlatformShowcase() {
   const scrollContainerRef = useRef<HTMLDivElement | null>(null)
   const [activeCardIndex, setActiveCardIndex] = useState(0)
   const [scrollProgress, setScrollProgress] = useState(0)
+  const [edgeSpacerWidth, setEdgeSpacerWidth] = useState(24)
 
   const mobileCards = [
     'العقار',
     'الخريطة',
-    'العقد والمتابعة',
-    'لوحة الإدارة',
+    'العقد',
+    'الإدارة',
   ]
+
+  function getCardVisualStyle(index: number): CSSProperties {
+    const distance = Math.abs(scrollProgress - index)
+    const emphasis = Math.max(0, 1 - Math.min(distance, 1.2))
+    const scale = 0.94 + emphasis * 0.06
+    const translateY = (1 - emphasis) * 10
+    const opacity = 0.58 + emphasis * 0.42
+    const borderOpacity = 0.12 + emphasis * 0.18
+    const glowOpacity = 0.06 + emphasis * 0.18
+    const activeSurfaceOpacity = 0.05 + emphasis * 0.12
+
+    return {
+      transform: `translateY(${translateY}px) scale(${scale})`,
+      opacity,
+      borderColor: `rgba(255,255,255,${borderOpacity})`,
+      background: `linear-gradient(180deg, rgba(255,255,255,${activeSurfaceOpacity}), rgba(255,255,255,0.02))`,
+      boxShadow: `0 18px 40px rgba(0,0,0,${0.12 + emphasis * 0.16}), 0 0 0 1px rgba(255,255,255,${0.04 + emphasis * 0.08}), 0 0 30px rgba(16,185,129,${glowOpacity})`,
+      transition: 'transform 280ms ease, opacity 280ms ease, border-color 280ms ease, box-shadow 280ms ease, background 280ms ease',
+      willChange: 'transform, opacity',
+    }
+  }
 
   function getSwipeCards() {
     const container = scrollContainerRef.current
@@ -22,6 +45,28 @@ export function HomePlatformShowcase() {
     }
 
     return Array.from(container.querySelectorAll<HTMLElement>('[data-swipe-card]'))
+  }
+
+  function updateEdgeSpacer() {
+    const container = scrollContainerRef.current
+    if (!container) {
+      return
+    }
+
+    const cards = getSwipeCards()
+    const firstCard = cards[0]
+    if (!firstCard) {
+      return
+    }
+
+    const nextSpacerWidth = Math.max(16, (container.clientWidth - firstCard.offsetWidth) / 2)
+    setEdgeSpacerWidth((currentWidth) => {
+      if (Math.abs(currentWidth - nextSpacerWidth) < 1) {
+        return currentWidth
+      }
+
+      return nextSpacerWidth
+    })
   }
 
   function updateActiveCard() {
@@ -101,9 +146,11 @@ export function HomePlatformShowcase() {
   }
 
   useEffect(() => {
+    updateEdgeSpacer()
     updateActiveCard()
 
     function handleResize() {
+      updateEdgeSpacer()
       updateActiveCard()
     }
 
@@ -136,16 +183,17 @@ export function HomePlatformShowcase() {
           بحث، خريطة، عقد، وإدارة في تجربة واحدة أوضح وأسرع.
         </p>
 
-        <div className="reveal-fade-up reveal-delay-2 mt-4 flex flex-wrap gap-2 text-xs font-semibold text-white/78">
-          <div className="rounded-full border border-white/10 bg-white/8 px-3 py-2">بحث + خريطة</div>
-          <div className="rounded-full border border-white/10 bg-white/8 px-3 py-2">عقد + دفعات</div>
+        <div className="reveal-fade-up reveal-delay-2 mt-4 flex flex-wrap justify-center gap-2 text-center text-xs font-semibold text-white/78 sm:justify-start">
+          <div className="rounded-full border border-white/10 bg-white/8 px-3 py-2 text-center">بحث + خريطة</div>
+          <div className="rounded-full border border-white/10 bg-white/8 px-3 py-2 text-center">عقد + دفعات</div>
           <div className="hidden rounded-full border border-white/10 bg-white/8 px-3 py-2 sm:block">صيانة + إشعارات</div>
           <div className="hidden rounded-full border border-white/10 bg-white/8 px-3 py-2 sm:block">لوحة تشغيل واحدة</div>
         </div>
 
         <div className="reveal-fade-up reveal-delay-3 mt-4 sm:hidden">
-          <div ref={scrollContainerRef} onScroll={updateActiveCard} className="no-scrollbar -mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto px-1 pb-2">
-            <article data-swipe-card className="min-w-[82%] snap-center rounded-[24px] border border-white/12 bg-white/7 p-4 shadow-[0_16px_40px_rgba(0,0,0,0.18)] backdrop-blur">
+          <div dir="rtl" ref={scrollContainerRef} onScroll={updateActiveCard} className="no-scrollbar -mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto px-1 pb-3">
+            <div aria-hidden="true" className="shrink-0" style={{ width: `${edgeSpacerWidth}px` }} />
+            <article dir="rtl" data-swipe-card style={getCardVisualStyle(0)} className="min-w-[82%] snap-center rounded-[24px] border border-white/12 bg-white/7 p-4 backdrop-blur">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <div className="text-xs font-semibold text-white/55">العقار</div>
@@ -170,7 +218,7 @@ export function HomePlatformShowcase() {
               </div>
             </article>
 
-            <article data-swipe-card className="min-w-[82%] snap-center rounded-[24px] border border-white/12 bg-white/7 p-4 shadow-[0_16px_40px_rgba(0,0,0,0.16)] backdrop-blur">
+            <article dir="rtl" data-swipe-card style={getCardVisualStyle(1)} className="min-w-[82%] snap-center rounded-[24px] border border-white/12 bg-white/7 p-4 backdrop-blur">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <div className="text-xs font-semibold text-white/55">الخريطة</div>
@@ -194,7 +242,7 @@ export function HomePlatformShowcase() {
               </div>
             </article>
 
-            <article data-swipe-card className="min-w-[82%] snap-center rounded-[24px] border border-white/12 bg-white/7 p-4 shadow-[0_16px_40px_rgba(0,0,0,0.16)] backdrop-blur">
+            <article dir="rtl" data-swipe-card style={getCardVisualStyle(2)} className="min-w-[82%] snap-center rounded-[24px] border border-white/12 bg-white/7 p-4 backdrop-blur">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <div className="text-xs font-semibold text-white/55">العقد والمتابعة</div>
@@ -218,7 +266,7 @@ export function HomePlatformShowcase() {
               </div>
             </article>
 
-            <article data-swipe-card className="min-w-[82%] snap-center rounded-[24px] border border-white/12 bg-white/7 p-4 shadow-[0_16px_40px_rgba(0,0,0,0.16)] backdrop-blur">
+            <article dir="rtl" data-swipe-card style={getCardVisualStyle(3)} className="min-w-[82%] snap-center rounded-[24px] border border-white/12 bg-white/7 p-4 backdrop-blur">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <div className="text-xs font-semibold text-white/55">لوحة الإدارة</div>
@@ -245,60 +293,61 @@ export function HomePlatformShowcase() {
                 </div>
               </div>
             </article>
+            <div aria-hidden="true" className="shrink-0" style={{ width: `${edgeSpacerWidth}px` }} />
           </div>
 
           <div className="mt-3">
-            <div className="mx-auto grid max-w-[17rem] grid-cols-4 gap-2 rounded-full border border-white/10 bg-white/6 p-1">
-              {mobileCards.map((label, index) => {
-                const distance = Math.abs(scrollProgress - index)
-                const emphasis = Math.max(0, 1 - Math.min(distance, 1))
-                const backgroundOpacity = 0.12 + emphasis * 0.78
-                const borderOpacity = 0.1 + emphasis * 0.32
-                const textOpacity = 0.55 + emphasis * 0.45
-                const scale = 0.92 + emphasis * 0.14
+            <div dir="rtl" className="mx-auto max-w-[15.5rem] rounded-[22px] border border-white/10 bg-white/6 px-2 py-2">
+              <div className="grid grid-cols-4 items-start gap-1 text-center">
+                  {mobileCards.map((label, index) => {
+                    const distance = Math.abs(scrollProgress - index)
+                    const emphasis = Math.max(0, 1 - Math.min(distance, 1))
+                    const textOpacity = 0.45 + emphasis * 0.55
+                    const scale = 0.94 + emphasis * 0.06
 
-                return (
-                  <button
-                    key={label}
-                    type="button"
-                    onClick={() => scrollToCard(index)}
-                    aria-label={`الانتقال إلى بطاقة ${label}`}
-                    aria-pressed={index === activeCardIndex}
-                    className="rounded-full px-1 py-2 text-center text-[11px] font-semibold transition-all duration-300 ease-out"
-                    style={{
-                      backgroundColor: `rgba(255,255,255,${backgroundOpacity})`,
-                      border: `1px solid rgba(255,255,255,${borderOpacity})`,
-                      color: index === activeCardIndex
-                        ? 'rgb(15 23 42)'
-                        : `rgba(255,255,255,${textOpacity})`,
-                      transform: `scale(${scale})`,
-                      boxShadow: emphasis > 0.2 ? `0 10px 24px rgba(255,255,255,${0.08 + emphasis * 0.12})` : 'none',
-                    }}
-                  >
-                    {index + 1}
-                  </button>
-                )
-              })}
-            </div>
+                    return (
+                      <button
+                        key={label}
+                        type="button"
+                        onClick={() => scrollToCard(index)}
+                        aria-label={`الانتقال إلى بطاقة ${label}`}
+                        aria-pressed={index === activeCardIndex}
+                        className="flex flex-col items-center gap-2 rounded-[16px] px-1 py-1.5 transition-all duration-300 ease-out"
+                        style={{ transform: `scale(${scale})` }}
+                      >
+                        <span
+                          className="flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-semibold transition-all duration-300 ease-out"
+                          style={{
+                            backgroundColor: index === activeCardIndex ? 'rgba(255,255,255,0.92)' : 'rgba(255,255,255,0.08)',
+                            color: index === activeCardIndex ? 'rgb(15 23 42)' : `rgba(255,255,255,${textOpacity})`,
+                            boxShadow: index === activeCardIndex ? '0 8px 18px rgba(255,255,255,0.12)' : 'none',
+                          }}
+                        >
+                          {index + 1}
+                        </span>
 
-            <div className="mt-2 flex items-center justify-center gap-2 text-[11px] text-white/55">
-              {mobileCards.map((label, index) => (
-                <button
-                  key={`${label}-label`}
-                  type="button"
-                  onClick={() => scrollToCard(index)}
-                  className={index === activeCardIndex
-                    ? 'rounded-full bg-white/10 px-2 py-1 text-white transition-all duration-300 ease-out'
-                    : 'rounded-full px-2 py-1 text-white/45 transition-all duration-300 ease-out'
-                  }
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
+                        <span
+                          dir="rtl"
+                          className="block w-full rounded-full px-1 py-1 text-[10px] leading-4 transition-all duration-300 ease-out"
+                          style={{
+                            backgroundColor: index === activeCardIndex ? 'rgba(255,255,255,0.1)' : 'transparent',
+                            color: index === activeCardIndex ? 'rgb(255 255 255)' : `rgba(255,255,255,${textOpacity})`,
+                          }}
+                        >
+                          {label}
+                        </span>
 
-            <div className="mt-2 flex items-center justify-center text-[11px] text-white/60">
-              <span>اسحب أو اضغط للانتقال بين 4 بطاقات</span>
+                        <span
+                          className="block h-0.5 w-6 rounded-full transition-all duration-300 ease-out"
+                          style={{
+                            backgroundColor: index === activeCardIndex ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.14)',
+                            opacity: 0.45 + emphasis * 0.55,
+                          }}
+                        />
+                      </button>
+                    )
+                  })}
+                </div>
             </div>
           </div>
         </div>
